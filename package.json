@@ -1,7 +1,7 @@
 {
 	"name": "cppincludeguard",
 	"displayName": "C/C++ Include Guard",
-	"description": "Insert or Replace C/C++ Include Guard",
+	"description": "Insert C/C++ Include Guard",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.39.0"
