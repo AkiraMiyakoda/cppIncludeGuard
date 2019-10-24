@@ -1,0 +1,81 @@
+{
+	"name": "cppincludeguard",
+	"displayName": "C/C++ Include Guard",
+	"description": "Insert or Replace C/C++ Include Guard",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.39.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.insertIncludeGuard"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.insertIncludeGuard",
+				"title": "Insert C/C++ Include Guard"
+			}
+		],
+		"configuration": {
+			"title": "C/C++ Include Guard",
+			"type": "object",
+			"properties": {
+				"C/C++ Include Guard.Macro Type": {
+					"type": "string",
+					"enum": [
+						"GUID",
+						"Filename",
+						"Filepath"
+					],
+					"enumDescriptions": [
+						"Random GUID v4. Separeted by underscores.",
+						"File name of the current document. All non-alphanumeric characters are replaced with underscores.",
+						"File path of the current document. All non-alphanumeric characters are replaced with underscores."
+					],
+					"default": "GUID",
+					"description": "Source of include guard macros. GUID, Filename or File Path."
+				},
+				"C/C++ Include Guard.Prevent Decimal": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Prevent GUIDs from starting with a decimal number."
+				},
+				"C/C++ Include Guard.Prefix": {
+					"type": "string",
+					"default": "",
+					"description": "Prefix added to the include guard macros."
+				},
+				"C/C++ Include Guard.Suffix": {
+					"type": "string",
+					"default": "",
+					"description": "Suffix added to the include guard macros."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.6",
+		"@types/node": "^10.12.21",
+		"@types/vscode": "^1.39.0",
+		"glob": "^7.1.4",
+		"mocha": "^6.1.4",
+		"typescript": "^3.3.1",
+		"tslint": "^5.12.1",
+		"vscode-test": "^1.2.0"
+	},
+	"dependencies": {
+		"uuid": "^3.3.3"
+	}
+}
