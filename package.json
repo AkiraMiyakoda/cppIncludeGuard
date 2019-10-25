@@ -87,5 +87,10 @@
 	},
 	"dependencies": {
 		"uuid": "^3.3.3"
+	},
+	"publisher": "akiramiyakoda",
+	"repository": {
+		"url": "https://github.com/AkiraMiyakoda/cppIncludeGuard",
+		"type": "git"
 	}
 }
