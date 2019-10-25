@@ -53,6 +53,11 @@
 					"type": "string",
 					"default": "",
 					"description": "Suffix added to the include guard macros."
+				},
+				"C/C++ Include Guard.Skip Comment Blocks": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Insert the include guard beneath the first comment blocks."
 				}
 			}
 		}

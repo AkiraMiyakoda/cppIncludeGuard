@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-function fromGUID(preventDecimal: boolean) : string 
+function fromGUID(preventDecimal: boolean) : string
 {
     const uuidv4 = require('uuid/v4');
     let uuid = uuidv4();
@@ -28,26 +28,26 @@ function fromFileName(fullPath: boolean) : string
     }
 
     let fileName = documentUri.toString().substr(baseUri.uri.toString().length + 1);
-    if (!fullPath) { 
+    if (!fullPath) {
         const path = require('path');
-        fileName = path.basename(fileName);        
+        fileName = path.basename(fileName);
     }
 
     return fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
 }
 
-function createDirectives()
+function createDirectives() : any
 {
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
     const macroType   = config.get<string>('Macro Type',      'GUID');
     const macroPrefix = config.get<string>('Prefix',          '');
     const macroSuffix = config.get<string>('Suffix',          '');
     const noDecimal   = config.get<boolean>('Prevent Decimal', true);
-    
+
     let macroName : string;
     if (macroType === 'Filename') {
         macroName = fromFileName(false);
-    }   
+    }
     else if (macroType === 'Filepath') {
         macroName = fromFileName(true);
     }
@@ -63,6 +63,39 @@ function createDirectives()
     };
 }
 
+function findLineToInsert() : number
+{
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+        return 0;
+    }
+
+    const document = editor.document;
+    const text = document.getText();
+    let lastPos = 0;
+    for (;;) {
+        const match = /\/\*[\s\S]*?\\*\/|\/\/.*/.exec(text.substr(lastPos));
+        if (match !== null) {
+            if (/\S/.test(text.substr(lastPos, match.index))) {
+                break;
+            }
+            else {
+                lastPos += (match.index + match[0].length);
+            }
+        }
+        else {
+            break;
+        }
+    }
+
+    if (lastPos > 0) {
+        lastPos++;
+    }
+
+    return document.positionAt(lastPos).line;
+    
+}
+
 export function insertIncludeGuard()
 {
     const editor = vscode.window.activeTextEditor;
@@ -70,17 +103,25 @@ export function insertIncludeGuard()
         return;
     }
 
+    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
+    const skipComment = config.get<boolean>('Skip Comment Blocks', true);
+    
+    let lineToInsert = 0;
+    if (skipComment) {
+        lineToInsert = findLineToInsert();
+    }
+
     editor.edit(function (edit) {
         // Ensure the last line has an line ending.
         const document = editor.document;
-        const lastLine = document.lineAt(document.lineCount - 1);
-        if (!lastLine.isEmptyOrWhitespace) {
+        const bottomLine = document.lineAt(document.lineCount - 1);
+        if (!bottomLine.isEmptyOrWhitespace) {
             edit.insert(new vscode.Position(document.lineCount, 0), '\n');
         }
 
         // Insert include guard directives.
         const directives = createDirectives();
-        edit.insert(new vscode.Position(0, 0), directives['begin']);
+        edit.insert(new vscode.Position(lineToInsert, 0), directives['begin']);
         edit.insert(new vscode.Position(document.lineCount, 0), directives['end']);
     });
 }

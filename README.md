@@ -4,5 +4,6 @@ The **Insert C/C++ Include Guard Macros** enables you to add the include guard p
 
 ## Features
 * Generates an include guard macro from GUID v4, file name or file path.
-* Can prevent GUIDs from starting with a decimal number.
-* Can add a prefix and/or suffix to an include guard macro.
+* Prevent GUIDs from starting with a decimal number.
+* Add a prefix and/or suffix to an include guard macro.
+* Skip the comment blocks at the beginning of a file.
