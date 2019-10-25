@@ -3,6 +3,7 @@
 	"displayName": "C/C++ Include Guard",
 	"description": "Insert C/C++ Include Guard",
 	"version": "0.1.0",
+	"license": "MIT",
 	"engines": {
 		"vscode": "^1.39.0"
 	},
