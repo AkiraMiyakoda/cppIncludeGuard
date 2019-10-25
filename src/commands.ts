@@ -4,7 +4,7 @@
  * This software is released under the MIT License.
  * https://opensource.org/licenses/MIT
  */
-
+ 
 import * as vscode from 'vscode';
 
 function fromGUID(preventDecimal: boolean) : string
@@ -81,7 +81,7 @@ function findLineToInsert() : number
     const text = document.getText();
     let lastPos = 0;
     for (;;) {
-        const match = /\/\*[\s\S]*?\\*\/|\/\/.*/.exec(text.substr(lastPos));
+        const match = /\/\/.*$|\/(?!\\)\*[\s\S]*?\*(?!\\)\//m.exec(text.substr(lastPos));
         if (match !== null) {
             if (/\S/.test(text.substr(lastPos, match.index))) {
                 break;
