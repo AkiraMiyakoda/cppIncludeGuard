@@ -153,8 +153,8 @@ export function insertIncludeGuard() : void
     editor.edit(function (edit) {
         // Ensure the last line has an line ending.
         const document = editor.document;
-        const bottomLine = document.lineAt(document.lineCount - 1);
-        if (!bottomLine.isEmptyOrWhitespace) {
+        const bottomLine = document.lineAt(document.lineCount - 1).text;
+        if (bottomLine.length !== 0) {
             edit.insert(new vscode.Position(document.lineCount, 0), '\n');
         }
 
