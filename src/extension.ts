@@ -7,6 +7,9 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('extension.insertIncludeGuard', () => {
         commands.insertIncludeGuard();
     }));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.removeIncludeGuard', () => {
+        commands.removeIncludeGuard();
+    }));
 }
 
 // this method is called when your extension is deactivated

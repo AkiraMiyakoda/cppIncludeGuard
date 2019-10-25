@@ -1,6 +1,6 @@
 # Insert C/C++ Include Guard Macros
 
-The **Insert C/C++ Include Guard Macros** enables you to add the include guard preprocessor directives to your C/C++ header files in one go.
+The **Insert C/C++ Include Guard Macros** enables you to add or remove include guard preprocessor directives to your C/C++ header files in one go.
 
 ## Features
 * Generates an include guard macro from GUID v4, file name or file path.

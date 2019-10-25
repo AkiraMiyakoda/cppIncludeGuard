@@ -96,7 +96,39 @@ function findLineToInsert() : number
     
 }
 
-export function insertIncludeGuard()
+function findLinesToRemove() : Array<number>
+{
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+        return [];
+    }
+
+    const document = editor.document;
+    const text = document.getText();
+    const match1 = /^#ifndef\s+(\S+)\s*$/m.exec(text);
+    const match2 = /^#define\s+(\S+)\s*$/m.exec(text);
+    const match3 = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
+
+    if (match1 === null || match2 === null || match3 === null) {
+        return [];
+    }
+
+    if (match1[1] !== match2[1] || match2[1] !== match3[1]) {
+        return [];
+    }
+
+    if (match1.index > match2.index || match2.index > match3.index) {
+        return [];
+    }
+
+    return [
+        document.positionAt(match3.index).line,
+        document.positionAt(match2.index).line,
+        document.positionAt(match1.index).line
+    ];
+}
+
+export function insertIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
@@ -124,4 +156,21 @@ export function insertIncludeGuard()
         edit.insert(new vscode.Position(lineToInsert, 0), directives['begin']);
         edit.insert(new vscode.Position(document.lineCount, 0), directives['end']);
     });
+}
+
+export function removeIncludeGuard() : void
+{
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+        return;
+    }
+
+    const linesToRemove = findLinesToRemove();
+    if (linesToRemove.length == 3) {
+        editor.edit(function (edit) {
+            linesToRemove.forEach((l) => {
+                edit.delete(new vscode.Range(new vscode.Position(l, 0), new vscode.Position(l + 1, 0)));
+            });
+        });
+    }
 }
