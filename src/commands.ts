@@ -173,7 +173,7 @@ export function removeIncludeGuard() : void
     }
 
     const linesToRemove = findLinesToRemove();
-    if (linesToRemove.length == 3) {
+    if (linesToRemove.length === 3) {
         editor.edit(function (edit) {
             linesToRemove.forEach((l) => {
                 edit.delete(new vscode.Range(new vscode.Position(l, 0), new vscode.Position(l + 1, 0)));
