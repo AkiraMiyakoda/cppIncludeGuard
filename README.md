@@ -29,7 +29,7 @@ The **Insert C/C++ Include Guard Macros** extension enables you to add or remove
 ```C
 /**
  * Copyright (c) 2019 Akira Miyakoda
- * 
+ *
  * This software is released under the MIT License.
  * https://opensource.org/licenses/MIT
  */

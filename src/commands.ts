@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2019 Akira Miyakoda
- * 
+ *
  * This software is released under the MIT License.
  * https://opensource.org/licenses/MIT
  */
- 
+
 import * as vscode from 'vscode';
 
 function fromGUID(preventDecimal: boolean) : string
@@ -100,7 +100,7 @@ function findLineToInsert() : number
     }
 
     return document.positionAt(lastPos).line;
-    
+
 }
 
 function findLinesToRemove() : Array<number>
@@ -144,7 +144,7 @@ export function insertIncludeGuard() : void
 
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
     const skipComment = config.get<boolean>('Skip Comment Blocks', true);
-    
+
     let lineToInsert = 0;
     if (skipComment) {
         lineToInsert = findLineToInsert();
