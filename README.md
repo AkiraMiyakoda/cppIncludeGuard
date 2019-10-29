@@ -4,7 +4,7 @@
 
 # Insert C/C++ Include Guard Macros
 
-The **Insert C/C++ Include Guard Macros** extension enables you to add or remove an include guard to your C/C++ header files in one go.
+The **C/C++ Include Guard** extension enables you to add or remove an include guard to your C/C++ header files in one go.
 
 ## Features
 
