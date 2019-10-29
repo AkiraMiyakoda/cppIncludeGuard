@@ -93,5 +93,9 @@
 	"repository": {
 		"url": "https://github.com/AkiraMiyakoda/cppIncludeGuard",
 		"type": "git"
-	}
+	},
+	"keywords": [
+		"c",
+		"c++"
+	]
 }
