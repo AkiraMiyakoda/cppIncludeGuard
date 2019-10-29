@@ -21,7 +21,7 @@ function fromGUID(preventDecimal: boolean) : string
     return uuid.toUpperCase().replace(/\-/g, '_');
 }
 
-function fromFileName(fullPath: boolean) : string
+function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
 {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
@@ -40,26 +40,32 @@ function fromFileName(fullPath: boolean) : string
         fileName = path.basename(fileName);
     }
 
-    return fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+    let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+    if (shortenUnderscores) {
+        macro = macro.replace(/_+/g, '_');
+    }
+
+    return macro;
 }
 
 function createDirectives() : any
 {
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const macroType   = config.get<string>('Macro Type',      'GUID');
-    const macroPrefix = config.get<string>('Prefix',          '');
-    const macroSuffix = config.get<string>('Suffix',          '');
-    const noDecimal   = config.get<boolean>('Prevent Decimal', true);
+    const macroType          = config.get<string >('Macro Type',          'GUID');
+    const macroPrefix        = config.get<string >('Prefix',              '');
+    const macroSuffix        = config.get<string >('Suffix',              '');
+    const preventDecimal     = config.get<boolean>('Prevent Decimal',     true);
+    const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
 
     let macroName : string;
     if (macroType === 'Filename') {
-        macroName = fromFileName(false);
+        macroName = fromFileName(false, shortenUnderscores);
     }
     else if (macroType === 'Filepath') {
-        macroName = fromFileName(true);
+        macroName = fromFileName(true, shortenUnderscores);
     }
     else {
-        macroName = fromGUID(noDecimal);
+        macroName = fromGUID(preventDecimal);
     }
 
     macroName = macroPrefix + macroName + macroSuffix;

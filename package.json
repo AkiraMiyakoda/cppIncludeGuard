@@ -64,6 +64,11 @@
 					"type": "boolean",
 					"default": "true",
 					"description": "Insert the include guard beneath the first comment blocks."
+				},
+				"C/C++ Include Guard.Shorten Underscores": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Shorten multiple underscores in filenames or file paths."
 				}
 			}
 		}

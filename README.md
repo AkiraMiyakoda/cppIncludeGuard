@@ -8,7 +8,7 @@ The **Insert C/C++ Include Guard Macros** extension enables you to add or remove
 
 ## Features
 
-* Generates include guard macros from GUID v4, file name or file path.
+* Generates include guard macros from GUID v4, file name or file path. All non-alphanumeric characters are replaced with underscores.
 ```C
 // GUID v4
 #define E8A33412_A210_4F05_99A4_F6E2019B7137
@@ -18,18 +18,25 @@ The **Insert C/C++ Include Guard Macros** extension enables you to add or remove
 #define FOO_BAR_UTILS_H
 ```
 
-* Prevents GUIDs from starting with a decimal number.
+* Prevents GUIDs from starting with a decimal number. (Optional)
 ```C
 // Can prevent ill-formed macros like this.
 #define 47A7840C_D31B_4D39_BF77_E5E957F0A97A
 ```
 
-* Adds a cusomizable prefix and/or suffix to include guard macros.
+* Adds a cusomizable prefix and/or suffix to include guard macros. (Optional)
 ```C
 #define ABC_7FE87DA8_601D_4D8E_AEE5_E6BE6EAB5678_XYZ
 ```
 
-* Skips comment blocks at the beginning of a file.
+* Shortens redundant underscores. (Optional)
+```C
+// From a path like 'foo/_bar_/utils.h'.
+#define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
+```
+
+
+* Skips comment blocks at the beginning of a file. (Optional)
 ```C
 /**
  * Copyright (c) 2019 Akira Miyakoda
