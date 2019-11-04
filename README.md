@@ -8,7 +8,7 @@ The **C/C++ Include Guard** extension enables you to add or remove [include guar
 
 ## Features
 
-* Generates include guard macros from GUID v4, file name or file path. All non-alphanumeric characters are replaced with underscores.
+* Generates include guard macros from UUID v4 (or GUID), file name or file path. All non-alphanumeric characters are replaced with underscores.
 ```C
 // GUID v4
 #define E8A33412_A210_4F05_99A4_F6E2019B7137
