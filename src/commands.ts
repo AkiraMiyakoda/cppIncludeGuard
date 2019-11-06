@@ -101,12 +101,12 @@ function findLineToInsert() : number
         }
     }
 
-    if (lastPos > 0) {
-        lastPos++;
+    if (lastPos === 0) {
+        return 0;
     }
-
-    return document.positionAt(lastPos).line;
-
+    else {
+        return document.positionAt(lastPos).line + 1;
+    }
 }
 
 function findLinesToRemove() : Array<number>

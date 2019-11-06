@@ -35,7 +35,6 @@ The **C/C++ Include Guard** extension enables you to add or remove [include guar
 #define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
 ```
 
-
 * Skips comment blocks at the beginning of a file. (Optional)
 ```C
 /**
