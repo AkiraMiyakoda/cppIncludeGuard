@@ -8,10 +8,12 @@ The **C/C++ Include Guard** extension enables you to add, remove or update [incl
 
 ## Screenshots
 
-* Insert and Remove include guard
+Insert and Remove include guard
+
 ![Insert and Remove](https://github.com/AkiraMiyakoda/cppIncludeGuard/raw/master/images/insert-remove.gif)
 
-* Update existing include guard
+Update existing include guard
+
 ![Update existing](https://github.com/AkiraMiyakoda/cppIncludeGuard/raw/master/images/update.gif)
 
 ## Features
