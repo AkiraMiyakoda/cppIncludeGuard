@@ -12,7 +12,8 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.insertIncludeGuard",
-		"onCommand:extension.removeIncludeGuard"
+		"onCommand:extension.removeIncludeGuard",
+		"onCommand:extension.updateIncludeGuard"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -24,6 +25,10 @@
 			{
 				"command": "extension.removeIncludeGuard",
 				"title": "Remove C/C++ Include Guard"
+			},
+			{
+				"command": "extension.updateIncludeGuard",
+				"title": "Insert or Update C/C++ Include Guard"
 			}
 		],
 		"configuration": {

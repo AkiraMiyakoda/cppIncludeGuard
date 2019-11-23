@@ -16,7 +16,10 @@ export function activate(context: vscode.ExtensionContext) {
             commands.insertIncludeGuard();
         }),
         vscode.commands.registerCommand('extension.removeIncludeGuard', () => {
-        commands.removeIncludeGuard();
+            commands.removeIncludeGuard();
+        }),
+        vscode.commands.registerCommand('extension.updateIncludeGuard', () => {
+            commands.updateIncludeGuard();
         })
     );
 }

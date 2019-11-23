@@ -151,6 +151,13 @@ function findLinesToRemove() : Array<number>
     ];
 }
 
+// Create a range that represents a whole line.
+function lineToRange(n: number) : vscode.Range
+{
+    return new vscode.Range(
+        new vscode.Position(n, 0), new vscode.Position(n + 1, 0));
+}
+
 // =============================================================================
 //  Public command handlers
 // =============================================================================
@@ -199,10 +206,34 @@ export function removeIncludeGuard() : void
     if (linesToRemove.length !== 0) {
         editor.edit(function (edit) {
             // Remove them.
-            linesToRemove.forEach((l) => {
-                edit.delete(
-                    new vscode.Range(new vscode.Position(l, 0), new vscode.Position(l + 1, 0)));
-            });
+            edit.delete(lineToRange(linesToRemove[0]));
+            edit.delete(lineToRange(linesToRemove[1]));
+            edit.delete(lineToRange(linesToRemove[2]));
         });
+    }
+}
+
+// Insert or Update include guard macros.
+export function updateIncludeGuard() : void
+{
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+        return;
+    }
+
+    // If include guard directives have been found ...
+    const linesToRemove = findLinesToRemove();
+    if (linesToRemove.length !== 0) {
+        editor.edit(function (edit) {
+            // Replace them with new ones.
+            const directives = createDirectives();
+            edit.replace(lineToRange(linesToRemove[0]), directives[2]);
+            edit.replace(lineToRange(linesToRemove[1]), directives[1]);
+            edit.replace(lineToRange(linesToRemove[2]), directives[0]);
+        });
+    }
+    else {
+        // Or just insert the new directives if old ones have not been found.
+        insertIncludeGuard();
     }
 }
