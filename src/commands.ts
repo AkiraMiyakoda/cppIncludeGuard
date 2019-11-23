@@ -205,10 +205,10 @@ export function removeIncludeGuard() : void
     const linesToRemove = findLinesToRemove();
     if (linesToRemove.length !== 0) {
         editor.edit(function (edit) {
-            // Remove them backwards.
-            edit.delete(lineToRange(linesToRemove[2]));
-            edit.delete(lineToRange(linesToRemove[1]));
-            edit.delete(lineToRange(linesToRemove[0]));
+            // Remove them.
+            for (let i = 0; i < 3; ++i) {
+                edit.delete(lineToRange(linesToRemove[i]));
+            }
         });
     }
 }
@@ -227,9 +227,9 @@ export function updateIncludeGuard() : void
         editor.edit(function (edit) {
             // Replace them with new ones.
             const directives = createDirectives();
-            edit.replace(lineToRange(linesToRemove[0]), directives[0]);
-            edit.replace(lineToRange(linesToRemove[1]), directives[1]);
-            edit.replace(lineToRange(linesToRemove[2]), directives[2]);
+            for (let i = 0; i < 3; ++i) {
+                edit.replace(lineToRange(linesToRemove[i]), directives[i]);
+            }
         });
     }
     else {
