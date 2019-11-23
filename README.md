@@ -52,6 +52,7 @@ Update existing include guard
 ```
 
 * Skips comment blocks at the beginning of a file. (Optional)
+* Inserts a blank line after the first comment blocks. (Optional)
 ```C
 /**
  * Copyright (c) 2019 Akira Miyakoda
@@ -59,6 +60,7 @@ Update existing include guard
  * This software is released under the MIT License.
  * https://opensource.org/licenses/MIT
  */
+
 #ifndef FOO_BAR_UTILS_H     // <- Inserted here.
 #define FOO_BAR_UTILS_H
 ```

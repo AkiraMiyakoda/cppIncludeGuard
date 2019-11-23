@@ -218,7 +218,8 @@ export function insertIncludeGuard() : void
     }
 
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const skipComment = config.get<boolean>('Skip Comment Blocks', true);
+    const skipComment     = config.get<boolean>('Skip Comment Blocks', true);
+    const insertBlankLine = config.get<boolean>('Insert Blank Line',   true);
 
     let lineToInsert = 0;
     if (skipComment) {
@@ -235,6 +236,9 @@ export function insertIncludeGuard() : void
 
         // Insert include guard directives.
         const directives = createDirectives();
+        if (lineToInsert !== 0 && insertBlankLine) {
+            directives[0] = '\n' + directives[0];
+        }
         edit.insert(new vscode.Position(lineToInsert, 0), directives[0] + directives[1]);
         edit.insert(new vscode.Position(document.lineCount, 0), directives[2]);
     });
