@@ -11,7 +11,12 @@ import * as vscode from 'vscode';
 //  Internal functions
 // =============================================================================
 
-// Create a macro name from UUID v4.
+/**
+ * Generates a macro name from UUID v4.
+ *
+ * @param preventDecimal If true, the returned string never starts with 0-9.
+ * @returns Macro name. All upprecase. Separated by underscores.
+ */
 function fromGUID(preventDecimal: boolean) : string
 {
     const uuidv4 = require('uuid/v4');
@@ -26,7 +31,17 @@ function fromGUID(preventDecimal: boolean) : string
     return uuid.toUpperCase().replace(/\-/g, '_');
 }
 
-// Create a macro name from the file name or file path.
+/**
+ * Generates a macro name from the file name or file path.
+ *
+ * @param fullPath If true, the returned string includes the path of current
+ *                 document from the project root.
+ *                 If false, only the file name is used.
+ * @param shortenUnderscores If true, consecutive underscores are shortened into
+ *                           one.
+ * @returns Macro name. All upprecase. All non-alphanumeric characters are
+ *          replaced with underscores.
+ */
 function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
 {
     const editor = vscode.window.activeTextEditor;
@@ -54,7 +69,11 @@ function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
     return macro;
 }
 
-// Generate include guard directives according to the preferences.
+/**
+ * Generates include guard directives according to the configuration.
+ *
+ * @returns Array of strings like [ '#ifndef ...', '#define ...', '#endif ...' ].
+ */
 function createDirectives() : Array<string>
 {
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
@@ -84,7 +103,12 @@ function createDirectives() : Array<string>
     ];
 }
 
-// Find the line below the first comment blocks to insert an include guard.
+/**
+ * Finds the line number just below the comment blocks at the beginning of the
+ * current document.
+ *
+ * @returns Line number to insert the directives.
+ */
 function findLineToInsert() : number
 {
     const editor = vscode.window.activeTextEditor;
@@ -118,7 +142,11 @@ function findLineToInsert() : number
     }
 }
 
-// Find the positions of existing include guard directives.
+/**
+ * Finds the line numbers where the existing include guard directives are.
+ * 
+ * @returns Array of line numbers.
+ */
 function findLinesToRemove() : Array<number>
 {
     const editor = vscode.window.activeTextEditor;
@@ -151,7 +179,13 @@ function findLinesToRemove() : Array<number>
     ];
 }
 
-// Create a range that represents a whole line.
+/**
+ * Convert a line number into a range that represents a whole line including the
+ * line ending.
+ * 
+ * @param n Line number
+ * @returns vscode.Range that represents a whole line.
+ */
 function lineToRange(n: number) : vscode.Range
 {
     return new vscode.Range(
@@ -162,7 +196,10 @@ function lineToRange(n: number) : vscode.Range
 //  Public command handlers
 // =============================================================================
 
-// Insert new include guard macros.
+/**
+ * Command Handler for 'extension.insertIncludeGuard'.
+ * Insert new include guard directives into the current document.
+ */
 export function insertIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
@@ -193,7 +230,10 @@ export function insertIncludeGuard() : void
     });
 }
 
-// Remove old include guard macros.
+/**
+ * Command Handler for 'extension.removeIncludeGuard'.
+ * Remove existing include guard directives from the current document.
+ */
 export function removeIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
@@ -213,7 +253,10 @@ export function removeIncludeGuard() : void
     }
 }
 
-// Insert or Update include guard macros.
+/**
+ * Command Handler for 'extension.updateIncludeGuard'.
+ * Replace existing include guard directives with new ones.
+ */
 export function updateIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
