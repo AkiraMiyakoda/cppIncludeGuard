@@ -145,9 +145,9 @@ function findLinesToRemove() : Array<number>
     }
 
     return [
-        document.positionAt(match3.index).line,
+        document.positionAt(match1.index).line,
         document.positionAt(match2.index).line,
-        document.positionAt(match1.index).line
+        document.positionAt(match3.index).line
     ];
 }
 
@@ -205,10 +205,10 @@ export function removeIncludeGuard() : void
     const linesToRemove = findLinesToRemove();
     if (linesToRemove.length !== 0) {
         editor.edit(function (edit) {
-            // Remove them.
-            edit.delete(lineToRange(linesToRemove[0]));
-            edit.delete(lineToRange(linesToRemove[1]));
+            // Remove them backwards.
             edit.delete(lineToRange(linesToRemove[2]));
+            edit.delete(lineToRange(linesToRemove[1]));
+            edit.delete(lineToRange(linesToRemove[0]));
         });
     }
 }
@@ -227,9 +227,9 @@ export function updateIncludeGuard() : void
         editor.edit(function (edit) {
             // Replace them with new ones.
             const directives = createDirectives();
-            edit.replace(lineToRange(linesToRemove[0]), directives[2]);
+            edit.replace(lineToRange(linesToRemove[0]), directives[0]);
             edit.replace(lineToRange(linesToRemove[1]), directives[1]);
-            edit.replace(lineToRange(linesToRemove[2]), directives[0]);
+            edit.replace(lineToRange(linesToRemove[2]), directives[2]);
         });
     }
     else {
