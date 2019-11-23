@@ -12,15 +12,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     const commands = require('./commands');
     context.subscriptions.push(
-        vscode.commands.registerCommand('extension.insertIncludeGuard', () => {
-            commands.insertIncludeGuard();
-        }),
-        vscode.commands.registerCommand('extension.removeIncludeGuard', () => {
-            commands.removeIncludeGuard();
-        }),
-        vscode.commands.registerCommand('extension.updateIncludeGuard', () => {
-            commands.updateIncludeGuard();
-        })
+        vscode.commands.registerCommand(
+            'extension.insertIncludeGuard', () => commands.insertIncludeGuard()),
+        vscode.commands.registerCommand(
+            'extension.removeIncludeGuard', () => commands.removeIncludeGuard()),
+        vscode.commands.registerCommand(
+            'extension.updateIncludeGuard', () => commands.updateIncludeGuard())
     );
 }
 
