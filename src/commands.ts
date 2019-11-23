@@ -39,6 +39,7 @@ function fromGUID(preventDecimal: boolean) : string
  *                 If false, only the file name is used.
  * @param shortenUnderscores If true, consecutive underscores are shortened into
  *                           one.
+ * @param removeExtension If true, the file extension is not used.
  * @returns Macro name. All upprecase. All non-alphanumeric characters are
  *          replaced with underscores.
  */
