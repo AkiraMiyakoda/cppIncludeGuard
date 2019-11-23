@@ -74,6 +74,11 @@
 					"type": "boolean",
 					"default": "true",
 					"description": "Shorten multiple underscores in filenames or file paths."
+				},
+				"C/C++ Include Guard.Remove Extension": {
+					"type": "boolean",
+					"default": "false",
+					"description": "Remove file extension from include guard macros."
 				}
 			}
 		}

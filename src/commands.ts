@@ -42,7 +42,9 @@ function fromGUID(preventDecimal: boolean) : string
  * @returns Macro name. All upprecase. All non-alphanumeric characters are
  *          replaced with underscores.
  */
-function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
+function fromFileName(fullPath: boolean,
+                      shortenUnderscores: boolean,
+                      removeExtension: boolean) : string
 {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
@@ -55,11 +57,17 @@ function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
         return '';
     }
 
+    const path = require('path');
     let fileName = documentUri.toString().substr(baseUri.uri.toString().length + 1);
     if (!fullPath) {
-        const path = require('path');
         fileName = path.basename(fileName);
     }
+
+    if (removeExtension) {
+        const extension = path.extname(fileName);
+        fileName = fileName.substring(0, fileName.length - extension.length);
+    }
+
 
     let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
     if (shortenUnderscores) {
@@ -82,13 +90,14 @@ function createDirectives() : Array<string>
     const macroSuffix        = config.get<string >('Suffix',              '');
     const preventDecimal     = config.get<boolean>('Prevent Decimal',     true);
     const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
+    const removeExtension    = config.get<boolean>('Remove Extension',    false);
 
     let macroName : string;
     if (macroType === 'Filename') {
-        macroName = fromFileName(false, shortenUnderscores);
+        macroName = fromFileName(false, shortenUnderscores, removeExtension);
     }
     else if (macroType === 'Filepath') {
-        macroName = fromFileName(true, shortenUnderscores);
+        macroName = fromFileName(true, shortenUnderscores, removeExtension);
     }
     else {
         macroName = fromGUID(preventDecimal);
@@ -144,7 +153,7 @@ function findLineToInsert() : number
 
 /**
  * Finds the line numbers where the existing include guard directives are.
- * 
+ *
  * @returns Array of line numbers.
  */
 function findLinesToRemove() : Array<number>
@@ -182,7 +191,7 @@ function findLinesToRemove() : Array<number>
 /**
  * Convert a line number into a range that represents a whole line including the
  * line ending.
- * 
+ *
  * @param n Line number
  * @returns vscode.Range that represents a whole line.
  */

@@ -34,7 +34,7 @@ Update existing include guard
 #define 47A7840C_D31B_4D39_BF77_E5E957F0A97A
 ```
 
-* Adds a cusomizable prefix and/or suffix to include guard macros. (Optional)
+* Adds a cusomizable prefix and/or suffix. (Optional)
 ```C
 #define ABC_7FE87DA8_601D_4D8E_AEE5_E6BE6EAB5678_XYZ
 ```
@@ -43,6 +43,12 @@ Update existing include guard
 ```C
 // From a path like 'foo/_bar_/utils.h'.
 #define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
+```
+
+* Removes file extension. (Optional)
+```C
+// From a path like 'foo/bar/utils.h'.
+#define FOO_BAR_UTILS
 ```
 
 * Skips comment blocks at the beginning of a file. (Optional)
