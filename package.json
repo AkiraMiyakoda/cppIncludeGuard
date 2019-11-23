@@ -58,17 +58,17 @@
 				"C/C++ Include Guard.Prefix": {
 					"type": "string",
 					"default": "",
-					"description": "Prefix added to the include guard macros."
+					"description": "Prefix added to include guard macros."
 				},
 				"C/C++ Include Guard.Suffix": {
 					"type": "string",
 					"default": "",
-					"description": "Suffix added to the include guard macros."
+					"description": "Suffix added to include guard macros."
 				},
 				"C/C++ Include Guard.Skip Comment Blocks": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Insert the include guard beneath the first comment blocks."
+					"description": "Insert include guard beneath the first comment blocks."
 				},
 				"C/C++ Include Guard.Shorten Underscores": {
 					"type": "boolean",
