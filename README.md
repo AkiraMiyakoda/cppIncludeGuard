@@ -45,7 +45,7 @@ Update existing include guard
 #define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
 ```
 
-* Removes file extension. (Optional)
+* Removes the file extension. (Optional)
 ```C
 // From a path like 'foo/bar/utils.h'.
 #define FOO_BAR_UTILS
