@@ -6,6 +6,10 @@
 
 The **C/C++ Include Guard** extension enables you to add, remove or update [include guard macros](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Include_Guard_Macro) to your C/C++ header files in one go.
 
+## Screenshot
+
+![Live Demo](https://github.com/AkiraMiyakoda/cppIncludeGuard/raw/master/images/demo.gif)
+
 ## Features
 
 * Generates include guard macros from GUID (or UUID v4), file name or file path. All non-alphanumeric characters are replaced with underscores.
