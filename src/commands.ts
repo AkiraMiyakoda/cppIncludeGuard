@@ -7,6 +7,11 @@
 
 import * as vscode from 'vscode';
 
+// =============================================================================
+//  Internal functions
+// =============================================================================
+
+// Create a macro name from UUID v4.
 function fromGUID(preventDecimal: boolean) : string
 {
     const uuidv4 = require('uuid/v4');
@@ -21,6 +26,7 @@ function fromGUID(preventDecimal: boolean) : string
     return uuid.toUpperCase().replace(/\-/g, '_');
 }
 
+// Create a macro name from the file name or file path.
 function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
 {
     const editor = vscode.window.activeTextEditor;
@@ -48,7 +54,8 @@ function fromFileName(fullPath: boolean, shortenUnderscores: boolean) : string
     return macro;
 }
 
-function createDirectives() : any
+// Generate include guard directives according to the preferences.
+function createDirectives() : Array<string>
 {
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
     const macroType          = config.get<string >('Macro Type',          'GUID');
@@ -70,12 +77,14 @@ function createDirectives() : any
 
     macroName = macroPrefix + macroName + macroSuffix;
 
-    return {
-        'begin': '#ifndef ' + macroName + '\n#define ' + macroName + '\n',
-        'end':   '#endif /* ' + macroName + ' */\n',
-    };
+    return [
+        '#ifndef '   + macroName + '\n',
+        '#define '   + macroName + '\n',
+        '#endif /* ' + macroName + ' */\n'
+    ];
 }
 
+// Find the line below the first comment blocks to insert an include guard.
 function findLineToInsert() : number
 {
     const editor = vscode.window.activeTextEditor;
@@ -109,6 +118,7 @@ function findLineToInsert() : number
     }
 }
 
+// Find the positions of existing include guard directives.
 function findLinesToRemove() : Array<number>
 {
     const editor = vscode.window.activeTextEditor;
@@ -141,6 +151,11 @@ function findLinesToRemove() : Array<number>
     ];
 }
 
+// =============================================================================
+//  Public command handlers
+// =============================================================================
+
+// Insert new include guard macros.
 export function insertIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
@@ -166,11 +181,12 @@ export function insertIncludeGuard() : void
 
         // Insert include guard directives.
         const directives = createDirectives();
-        edit.insert(new vscode.Position(lineToInsert, 0), directives['begin']);
-        edit.insert(new vscode.Position(document.lineCount, 0), directives['end']);
+        edit.insert(new vscode.Position(lineToInsert, 0), directives[0] + directives[1]);
+        edit.insert(new vscode.Position(document.lineCount, 0), directives[2]);
     });
 }
 
+// Remove old include guard macros.
 export function removeIncludeGuard() : void
 {
     const editor = vscode.window.activeTextEditor;
@@ -178,11 +194,14 @@ export function removeIncludeGuard() : void
         return;
     }
 
+    // If include guard directives have been found ...
     const linesToRemove = findLinesToRemove();
-    if (linesToRemove.length === 3) {
+    if (linesToRemove.length !== 0) {
         editor.edit(function (edit) {
+            // Remove them.
             linesToRemove.forEach((l) => {
-                edit.delete(new vscode.Range(new vscode.Position(l, 0), new vscode.Position(l + 1, 0)));
+                edit.delete(
+                    new vscode.Range(new vscode.Position(l, 0), new vscode.Position(l + 1, 0)));
             });
         });
     }
