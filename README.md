@@ -19,6 +19,7 @@ Update existing include guard
 ## Features
 
 * Generates include guard macros from GUID (or UUID v4), file name or file path. All non-alphanumeric characters are replaced with underscores.
+
 ```C
 // GUID
 #define E8A33412_A210_4F05_99A4_F6E2019B7137
@@ -29,23 +30,27 @@ Update existing include guard
 ```
 
 * Prevents GUIDs from starting with a decimal number. (Optional)
+
 ```C
 // Can prevent ill-formed macros like this.
 #define 47A7840C_D31B_4D39_BF77_E5E957F0A97A
 ```
 
 * Adds a cusomizable prefix and/or suffix. (Optional)
+
 ```C
 #define ABC_7FE87DA8_601D_4D8E_AEE5_E6BE6EAB5678_XYZ
 ```
 
 * Shortens redundant underscores. (Optional)
+
 ```C
 // From a path like 'foo/_bar_/utils.h'.
 #define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
 ```
 
 * Removes the file extension. (Optional)
+
 ```C
 // From a path like 'foo/bar/utils.h'.
 #define FOO_BAR_UTILS
@@ -53,6 +58,7 @@ Update existing include guard
 
 * Skips comment blocks at the beginning of a file. (Optional)
 * Inserts a blank line after the first comment blocks. (Optional)
+
 ```C
 /**
  * Copyright (c) 2019 Akira Miyakoda
