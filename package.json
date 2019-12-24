@@ -84,6 +84,19 @@
 					"type": "boolean",
 					"default": "false",
 					"description": "Remove file extension from include guard macros."
+				},
+				"C/C++ Include Guard.Comment Style": {
+					"type": "string",
+					"enum": [
+						"Block",
+						"Line"
+					],
+					"enumDescriptions": [
+						"Block Comment /* */",
+						"Line Comment //"
+					],
+					"default": "Block",
+					"description": "Comment style for #endif line" 
 				}
 			}
 		}

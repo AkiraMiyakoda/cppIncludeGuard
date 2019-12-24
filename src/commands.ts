@@ -92,6 +92,7 @@ function createDirectives() : Array<string>
     const preventDecimal     = config.get<boolean>('Prevent Decimal',     true);
     const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
     const removeExtension    = config.get<boolean>('Remove Extension',    false);
+    const commentStyle       = config.get<string >('Comment Style',       'Block');
 
     let macroName : string;
     if (macroType === 'Filename') {
@@ -106,10 +107,15 @@ function createDirectives() : Array<string>
 
     macroName = macroPrefix + macroName + macroSuffix;
 
+    let endifLine = '#endif /* ' + macroName + ' */\n';
+    if (commentStyle === 'Line') {
+        endifLine = '#endif // ' + macroName + '\n';
+    }
+
     return [
         '#ifndef '   + macroName + '\n',
         '#define '   + macroName + '\n',
-        '#endif /* ' + macroName + ' */\n'
+        endifLine
     ];
 }
 
@@ -168,7 +174,13 @@ function findLinesToRemove() : Array<number>
     const text = document.getText();
     const match1 = /^#ifndef\s+(\S+)\s*$/m.exec(text);
     const match2 = /^#define\s+(\S+)\s*$/m.exec(text);
-    const match3 = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
+    const match3_block = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
+    const match3_line = /^#endif\s+\/\/\s+(\S+)\s*$/m.exec(text);
+
+    let match3 = match3_block;
+    if (match3_block === null && match3_line !== null) {
+        match3 = match3_line;
+    }
 
     if (match1 === null || match2 === null || match3 === null) {
         return [];
