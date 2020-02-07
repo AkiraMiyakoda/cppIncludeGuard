@@ -17,8 +17,7 @@ import * as vscode from 'vscode';
  * @param preventDecimal If true, the returned string never starts with 0-9.
  * @returns Macro name. All upprecase. Separated by underscores.
  */
-function fromGUID(preventDecimal: boolean) : string
-{
+function fromGUID(preventDecimal: boolean): string {
     const uuidv4 = require('uuid/v4');
     let uuid = uuidv4();
 
@@ -44,22 +43,37 @@ function fromGUID(preventDecimal: boolean) : string
  *          replaced with underscores.
  */
 function fromFileName(fullPath: boolean,
-                      shortenUnderscores: boolean,
-                      removeExtension: boolean) : string
-{
+    pathDepth: number,
+    shortenUnderscores: boolean,
+    removeExtension: boolean): string {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return '';
     }
 
-    const documentUri = editor.document.uri;
+    let documentUri = editor.document.uri;
     const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
     if (documentUri === undefined || baseUri === undefined) {
         return '';
     }
 
-    const path = require('path');
     let fileName = documentUri.toString().substr(baseUri.uri.toString().length + 1);
+
+    const path = require('path');
+
+    if (pathDepth > 0) {
+        const arr = documentUri.toString().split("/");
+        if (arr.length > pathDepth) {
+            fileName = "";
+            const startIndex = arr.length - pathDepth - 1;
+            for (let index = startIndex; index < arr.length; index++) {
+                fileName = fileName + "/" + arr[index];
+            }
+            // remove leading /
+            fileName = fileName.substr(1);
+        }
+    }
+
     if (!fullPath) {
         fileName = path.basename(fileName);
     }
@@ -83,23 +97,23 @@ function fromFileName(fullPath: boolean,
  *
  * @returns Array of strings like [ '#ifndef ...', '#define ...', '#endif ...' ].
  */
-function createDirectives() : Array<string>
-{
+function createDirectives(): Array<string> {
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const macroType          = config.get<string >('Macro Type',          'GUID');
-    const macroPrefix        = config.get<string >('Prefix',              '');
-    const macroSuffix        = config.get<string >('Suffix',              '');
-    const preventDecimal     = config.get<boolean>('Prevent Decimal',     true);
+    const macroType = config.get<string>('Macro Type', 'GUID');
+    const macroPrefix = config.get<string>('Prefix', '');
+    const macroSuffix = config.get<string>('Suffix', '');
+    const preventDecimal = config.get<boolean>('Prevent Decimal', true);
     const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
-    const removeExtension    = config.get<boolean>('Remove Extension',    false);
-    const commentStyle       = config.get<string >('Comment Style',       'Block');
+    const removeExtension = config.get<boolean>('Remove Extension', false);
+    const commentStyle = config.get<string>('Comment Style', 'Block');
+    const pathDepth = config.get<number>('Path Depth', -1);
 
-    let macroName : string;
+    let macroName: string;
     if (macroType === 'Filename') {
-        macroName = fromFileName(false, shortenUnderscores, removeExtension);
+        macroName = fromFileName(false, pathDepth, shortenUnderscores, removeExtension);
     }
     else if (macroType === 'Filepath') {
-        macroName = fromFileName(true, shortenUnderscores, removeExtension);
+        macroName = fromFileName(true, pathDepth, shortenUnderscores, removeExtension);
     }
     else {
         macroName = fromGUID(preventDecimal);
@@ -113,8 +127,8 @@ function createDirectives() : Array<string>
     }
 
     return [
-        '#ifndef '   + macroName + '\n',
-        '#define '   + macroName + '\n',
+        '#ifndef ' + macroName + '\n',
+        '#define ' + macroName + '\n',
         endifLine
     ];
 }
@@ -125,8 +139,7 @@ function createDirectives() : Array<string>
  *
  * @returns Line number to insert the directives.
  */
-function findLineToInsert() : number
-{
+function findLineToInsert(): number {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return 0;
@@ -135,7 +148,7 @@ function findLineToInsert() : number
     const document = editor.document;
     const text = document.getText();
     let lastPos = 0;
-    for (;;) {
+    for (; ;) {
         const match = /\/\/.*$|\/(?!\\)\*[\s\S]*?\*(?!\\)\//m.exec(text.substr(lastPos));
         if (match !== null) {
             if (/\S/.test(text.substr(lastPos, match.index))) {
@@ -163,8 +176,7 @@ function findLineToInsert() : number
  *
  * @returns Array of line numbers.
  */
-function findLinesToRemove() : Array<number>
-{
+function findLinesToRemove(): Array<number> {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return [];
@@ -202,14 +214,38 @@ function findLinesToRemove() : Array<number>
 }
 
 /**
+ * Find pragma once and remove it from file.
+ *
+ * @returns Promise<boolean>
+ */
+async function findAndRemovePragmaOnce(): Promise<boolean> {
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined) {
+        return false;
+    }
+
+    const document = editor.document;
+    const text = document.getText();
+
+    const match = /^#pragma once*$/m.exec(text);
+    if(match == null){
+        return false;
+    }
+    const pos = document.positionAt(match.index).line;
+    return editor.edit(function (edit) {
+        // Remove line.
+            edit.delete(lineToRange(pos));
+    })
+}
+
+/**
  * Convert a line number into a range that represents a whole line including the
  * line ending.
  *
  * @param n Line number
  * @returns vscode.Range that represents a whole line.
  */
-function lineToRange(n: number) : vscode.Range
-{
+function lineToRange(n: number): vscode.Range {
     return new vscode.Range(
         new vscode.Position(n, 0), new vscode.Position(n + 1, 0));
 }
@@ -222,16 +258,20 @@ function lineToRange(n: number) : vscode.Range
  * Command Handler for 'extension.insertIncludeGuard'.
  * Insert new include guard directives into the current document.
  */
-export function insertIncludeGuard() : void
-{
+export async function insertIncludeGuard() : Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return;
     }
 
     const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const skipComment     = config.get<boolean>('Skip Comment Blocks', true);
-    const insertBlankLine = config.get<boolean>('Insert Blank Line',   true);
+    const skipComment = config.get<boolean>('Skip Comment Blocks', true);
+    const insertBlankLine = config.get<boolean>('Insert Blank Line', true);
+    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
+
+    if(removePragmaOnce){
+        await findAndRemovePragmaOnce();
+    }
 
     let lineToInsert = 0;
     if (skipComment) {
@@ -260,11 +300,17 @@ export function insertIncludeGuard() : void
  * Command Handler for 'extension.removeIncludeGuard'.
  * Remove existing include guard directives from the current document.
  */
-export function removeIncludeGuard() : void
-{
+export async function removeIncludeGuard(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return;
+    }
+
+    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
+    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
+
+    if(removePragmaOnce){
+        await findAndRemovePragmaOnce();
     }
 
     // If include guard directives have been found ...
@@ -283,11 +329,17 @@ export function removeIncludeGuard() : void
  * Command Handler for 'extension.updateIncludeGuard'.
  * Replace existing include guard directives with new ones.
  */
-export function updateIncludeGuard() : void
-{
+export async function updateIncludeGuard(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (editor === undefined) {
         return;
+    }
+    
+    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
+    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
+
+    if(removePragmaOnce){
+        await findAndRemovePragmaOnce();
     }
 
     // If include guard directives have been found ...
