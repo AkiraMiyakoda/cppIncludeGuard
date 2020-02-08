@@ -45,7 +45,7 @@
 					"enumDescriptions": [
 						"Random GUID v4. Separated by underscores.",
 						"File name of the current document. All non-alphanumeric characters are replaced with underscores.",
-						"File path of the current document. All non-alphanumeric characters are replaced with underscores."
+						"File path of the current document. All non-alphanumeric characters are replaced with underscores. Works like Filename outside workspaces."
 					],
 					"default": "GUID",
 					"description": "Source of include guard macros. GUID, Filename or File Path."

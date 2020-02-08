@@ -51,7 +51,7 @@ function fromFileName(fullPath: boolean,
         return '';
     }
 
-    let documentUri = editor.document.uri;
+    const documentUri = editor.document.uri;
     const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
     if (documentUri === undefined) {
         return '';
