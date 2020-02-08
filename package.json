@@ -2,7 +2,7 @@
 	"name": "cppincludeguard",
 	"displayName": "C/C++ Include Guard",
 	"description": "Insert C/C++ Include Guard",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.39.0"
@@ -43,12 +43,22 @@
 						"Filepath"
 					],
 					"enumDescriptions": [
-						"Random GUID v4. Separeted by underscores.",
+						"Random GUID v4. Separated by underscores.",
 						"File name of the current document. All non-alphanumeric characters are replaced with underscores.",
 						"File path of the current document. All non-alphanumeric characters are replaced with underscores."
 					],
 					"default": "GUID",
 					"description": "Source of include guard macros. GUID, Filename or File Path."
+				},
+				"C/C++ Include Guard.Path Depth": {
+					"type": "number",
+					"default": "-1",
+					"description": "Number of folders which should be used for include guard. Disabled with -1"
+				},
+				"C/C++ Include Guard.Remove Pragma Once": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Removes #pragma once directive if detected"
 				},
 				"C/C++ Include Guard.Prevent Decimal": {
 					"type": "boolean",
@@ -96,7 +106,7 @@
 						"Line Comment //"
 					],
 					"default": "Block",
-					"description": "Comment style for #endif line" 
+					"description": "Comment style for #endif line"
 				}
 			}
 		}
