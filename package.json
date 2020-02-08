@@ -52,8 +52,8 @@
 				},
 				"C/C++ Include Guard.Path Depth": {
 					"type": "number",
-					"default": "-1",
-					"description": "Number of folders which should be used for include guard. Disabled with -1"
+					"default": "0",
+					"description": "Number of folders which should be used for include guard. Disabled with 0."
 				},
 				"C/C++ Include Guard.Remove Pragma Once": {
 					"type": "boolean",

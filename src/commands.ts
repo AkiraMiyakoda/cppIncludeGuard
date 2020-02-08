@@ -53,28 +53,31 @@ function fromFileName(fullPath: boolean,
 
     let documentUri = editor.document.uri;
     const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
-    if (documentUri === undefined || baseUri === undefined) {
+    if (documentUri === undefined) {
         return '';
     }
 
-    let fileName = documentUri.toString().substr(baseUri.uri.toString().length + 1);
-
     const path = require('path');
 
-    if (pathDepth > 0) {
-        const arr = documentUri.toString().split("/");
-        if (arr.length > pathDepth) {
-            fileName = "";
-            const startIndex = arr.length - pathDepth - 1;
-            for (let index = startIndex; index < arr.length; index++) {
-                fileName = fileName + "/" + arr[index];
+    let fileName = documentUri.toString();
+    if (fullPath && baseUri !== undefined) {
+        fileName = fileName.substr(baseUri.uri.toString().length + 1);
+
+        if (pathDepth > 0) {
+            let index: number;
+            let count: number = 0;
+            for (index = fileName.length - 1; index >= 0; --index) {
+                if (fileName.charAt(index) === '/') {
+                    count++;
+                    if (count === pathDepth + 1) {
+                        fileName = fileName.substr(index + 1);
+                        break;
+                    }
+                }
             }
-            // remove leading /
-            fileName = fileName.substr(1);
         }
     }
-
-    if (!fullPath) {
+    else {
         fileName = path.basename(fileName);
     }
 
@@ -82,7 +85,6 @@ function fromFileName(fullPath: boolean,
         const extension = path.extname(fileName);
         fileName = fileName.substring(0, fileName.length - extension.length);
     }
-
 
     let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
     if (shortenUnderscores) {
@@ -106,7 +108,7 @@ function createDirectives(): Array<string> {
     const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
     const removeExtension = config.get<boolean>('Remove Extension', false);
     const commentStyle = config.get<string>('Comment Style', 'Block');
-    const pathDepth = config.get<number>('Path Depth', -1);
+    const pathDepth = config.get<number>('Path Depth', 0);
 
     let macroName: string;
     if (macroType === 'Filename') {
