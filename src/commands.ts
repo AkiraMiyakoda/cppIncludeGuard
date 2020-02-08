@@ -228,14 +228,14 @@ async function findAndRemovePragmaOnce(): Promise<boolean> {
     const text = document.getText();
 
     const match = /^#pragma once*$/m.exec(text);
-    if(match == null){
+    if(match === null){
         return false;
     }
     const pos = document.positionAt(match.index).line;
     return editor.edit(function (edit) {
         // Remove line.
             edit.delete(lineToRange(pos));
-    })
+    });
 }
 
 /**
