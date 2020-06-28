@@ -6,6 +6,8 @@
 
 The **C/C++ Include Guard** extension enables you to add, remove or update [include guard macros](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Include_Guard_Macro) to your C/C++ header files in one go.
 
+Thanks to contributor: **@erkan-ozkan**
+
 ## Screenshots
 
 Insert and Remove include guard
@@ -66,6 +68,13 @@ Update existing include guard
 #define FOO_BAR_UTILS
 ```
 
+* Selectable number of folders which should be used for include guard. (Optional)
+
+```C
+// From a path like 'foo/bar/utils.h'.
+#define BAR_UTILS
+```
+
 * Skips comment blocks at the beginning of a file. (Optional)
 * Inserts a blank line after the first comment blocks. (Optional)
 
@@ -80,3 +89,5 @@ Update existing include guard
 #ifndef FOO_BAR_UTILS_H     // <- Inserted here.
 #define FOO_BAR_UTILS_H
 ```
+
+* Removes #pragma once when an include guard is added. (Optional)
