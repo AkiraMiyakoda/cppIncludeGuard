@@ -18,7 +18,7 @@ import * as vscode from 'vscode';
  * @returns Macro name. All upprecase. Separated by underscores.
  */
 function fromGUID(preventDecimal: boolean): string {
-    const uuidv4 = require('uuid/v4');
+    const { v4: uuidv4 } = require('uuid');
     let uuid = uuidv4();
 
     // Prevent a macro from starting with a decimal number.

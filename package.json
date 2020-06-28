@@ -5,7 +5,7 @@
 	"version": "0.6.0",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.39.0"
+		"vscode": "^1.46.0"
 	},
 	"categories": [
 		"Other"
@@ -119,18 +119,18 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.39.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.2.0"
+		"@types/glob": "^7.1.2",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^14.0.14",
+		"@types/vscode": "^1.46.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.0.1",
+		"typescript": "^3.9.5",
+		"tslint": "^6.1.2",
+		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
-		"uuid": "^3.3.3"
+		"uuid": "^8.2.0"
 	},
 	"publisher": "akiramiyakoda",
 	"repository": {
