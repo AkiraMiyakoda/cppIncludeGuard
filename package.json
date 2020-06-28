@@ -135,7 +135,7 @@
 		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
-		"uuid": "^8.2.0"
+		"@types/uuid": "^8.0.0"
 	},
 	"publisher": "akiramiyakoda",
 	"repository": {

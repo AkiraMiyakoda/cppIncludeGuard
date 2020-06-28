@@ -5,7 +5,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { v4 as uuidv4 } from "uuid";
+import path = require("path");
 
 // =============================================================================
 //  Internal functions
@@ -18,16 +20,15 @@ import * as vscode from 'vscode';
  * @returns Macro name. All upprecase. Separated by underscores.
  */
 function fromGUID(preventDecimal: boolean): string {
-    const { v4: uuidv4 } = require('uuid');
-    let uuid = uuidv4();
+  let uuid = uuidv4();
 
-    // Prevent a macro from starting with a decimal number.
-    if (preventDecimal) {
-        const digit = parseInt(uuid.substr(0, 1), 16);
-        uuid = ((digit % 6) + 10).toString(16) + uuid.substr(1);
-    }
+  // Prevent a macro from starting with a decimal number.
+  if (preventDecimal) {
+    const digit = parseInt(uuid.substr(0, 1), 16);
+    uuid = ((digit % 6) + 10).toString(16) + uuid.substr(1);
+  }
 
-    return uuid.toUpperCase().replace(/\-/g, '_');
+  return uuid.toUpperCase().replace(/-/g, "_");
 }
 
 /**
@@ -42,56 +43,55 @@ function fromGUID(preventDecimal: boolean): string {
  * @returns Macro name. All upprecase. All non-alphanumeric characters are
  *          replaced with underscores.
  */
-function fromFileName(fullPath: boolean,
-    pathDepth: number,
-    shortenUnderscores: boolean,
-    removeExtension: boolean): string {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return '';
-    }
+function fromFileName(
+  fullPath: boolean,
+  pathDepth: number,
+  shortenUnderscores: boolean,
+  removeExtension: boolean
+): string {
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return "";
+  }
 
-    const documentUri = editor.document.uri;
-    const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
-    if (documentUri === undefined) {
-        return '';
-    }
+  const documentUri = editor.document.uri;
+  const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
+  if (documentUri === undefined) {
+    return "";
+  }
 
-    const path = require('path');
+  let fileName = documentUri.toString();
+  if (fullPath && baseUri !== undefined) {
+    fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
-    let fileName = documentUri.toString();
-    if (fullPath && baseUri !== undefined) {
-        fileName = fileName.substr(baseUri.uri.toString().length + 1);
-
-        if (pathDepth > 0) {
-            let index: number;
-            let count: number = 0;
-            for (index = fileName.length - 1; index >= 0; --index) {
-                if (fileName.charAt(index) === '/') {
-                    count++;
-                    if (count === pathDepth + 1) {
-                        fileName = fileName.substr(index + 1);
-                        break;
-                    }
-                }
-            }
+    if (pathDepth > 0) {
+      let index: number;
+      let count = 0;
+      for (index = fileName.length - 1; index >= 0; --index) {
+        if (fileName.charAt(index) === "/") {
+          count++;
+          if (count === pathDepth + 1) {
+            fileName = fileName.substr(index + 1);
+            break;
+          }
         }
+      }
     }
-    else {
-        fileName = path.basename(fileName);
-    }
+  } else {
+    fileName = path.basename(fileName);
+  }
 
-    if (removeExtension) {
-        const extension = path.extname(fileName);
-        fileName = fileName.substring(0, fileName.length - extension.length);
-    }
+  if (removeExtension) {
+    const extension = path.extname(fileName);
+    fileName = fileName.substring(0, fileName.length - extension.length);
+  }
 
-    let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
-    if (shortenUnderscores) {
-        macro = macro.replace(/_+/g, '_');
-    }
+  let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, "_");
+  if (shortenUnderscores) {
+    macro = macro.replace(/_+/g, "_");
+  }
 
-    return macro;
+  return macro;
 }
 
 /**
@@ -100,39 +100,47 @@ function fromFileName(fullPath: boolean,
  * @returns Array of strings like [ '#ifndef ...', '#define ...', '#endif ...' ].
  */
 function createDirectives(): Array<string> {
-    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const macroType = config.get<string>('Macro Type', 'GUID');
-    const macroPrefix = config.get<string>('Prefix', '');
-    const macroSuffix = config.get<string>('Suffix', '');
-    const preventDecimal = config.get<boolean>('Prevent Decimal', true);
-    const shortenUnderscores = config.get<boolean>('Shorten Underscores', true);
-    const removeExtension = config.get<boolean>('Remove Extension', false);
-    const commentStyle = config.get<string>('Comment Style', 'Block');
-    const pathDepth = config.get<number>('Path Depth', 0);
+  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const macroType = config.get<string>("Macro Type", "GUID");
+  const macroPrefix = config.get<string>("Prefix", "");
+  const macroSuffix = config.get<string>("Suffix", "");
+  const preventDecimal = config.get<boolean>("Prevent Decimal", true);
+  const shortenUnderscores = config.get<boolean>("Shorten Underscores", true);
+  const removeExtension = config.get<boolean>("Remove Extension", false);
+  const commentStyle = config.get<string>("Comment Style", "Block");
+  const pathDepth = config.get<number>("Path Depth", 0);
 
-    let macroName: string;
-    if (macroType === 'Filename') {
-        macroName = fromFileName(false, pathDepth, shortenUnderscores, removeExtension);
-    }
-    else if (macroType === 'Filepath') {
-        macroName = fromFileName(true, pathDepth, shortenUnderscores, removeExtension);
-    }
-    else {
-        macroName = fromGUID(preventDecimal);
-    }
+  let macroName: string;
+  if (macroType === "Filename") {
+    macroName = fromFileName(
+      false,
+      pathDepth,
+      shortenUnderscores,
+      removeExtension
+    );
+  } else if (macroType === "Filepath") {
+    macroName = fromFileName(
+      true,
+      pathDepth,
+      shortenUnderscores,
+      removeExtension
+    );
+  } else {
+    macroName = fromGUID(preventDecimal);
+  }
 
-    macroName = macroPrefix + macroName + macroSuffix;
+  macroName = macroPrefix + macroName + macroSuffix;
 
-    let endifLine = '#endif /* ' + macroName + ' */\n';
-    if (commentStyle === 'Line') {
-        endifLine = '#endif // ' + macroName + '\n';
-    }
+  let endifLine = "#endif /* " + macroName + " */\n";
+  if (commentStyle === "Line") {
+    endifLine = "#endif // " + macroName + "\n";
+  }
 
-    return [
-        '#ifndef ' + macroName + '\n',
-        '#define ' + macroName + '\n',
-        endifLine
-    ];
+  return [
+    "#ifndef " + macroName + "\n",
+    "#define " + macroName + "\n",
+    endifLine,
+  ];
 }
 
 /**
@@ -142,35 +150,34 @@ function createDirectives(): Array<string> {
  * @returns Line number to insert the directives.
  */
 function findLineToInsert(): number {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return 0;
-    }
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return 0;
+  }
 
-    const document = editor.document;
-    const text = document.getText();
-    let lastPos = 0;
-    for (; ;) {
-        const match = /\/\/.*$|\/(?!\\)\*[\s\S]*?\*(?!\\)\//m.exec(text.substr(lastPos));
-        if (match !== null) {
-            if (/\S/.test(text.substr(lastPos, match.index))) {
-                break;
-            }
-            else {
-                lastPos += (match.index + match[0].length);
-            }
-        }
-        else {
-            break;
-        }
+  const document = editor.document;
+  const text = document.getText();
+  let lastPos = 0;
+  for (;;) {
+    const match = /\/\/.*$|\/(?!\\)\*[\s\S]*?\*(?!\\)\//m.exec(
+      text.substr(lastPos)
+    );
+    if (match !== null) {
+      if (/\S/.test(text.substr(lastPos, match.index))) {
+        break;
+      } else {
+        lastPos += match.index + match[0].length;
+      }
+    } else {
+      break;
     }
+  }
 
-    if (lastPos === 0) {
-        return 0;
-    }
-    else {
-        return document.positionAt(lastPos).line + 1;
-    }
+  if (lastPos === 0) {
+    return 0;
+  } else {
+    return document.positionAt(lastPos).line + 1;
+  }
 }
 
 /**
@@ -179,40 +186,40 @@ function findLineToInsert(): number {
  * @returns Array of line numbers.
  */
 function findLinesToRemove(): Array<number> {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return [];
-    }
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return [];
+  }
 
-    const document = editor.document;
-    const text = document.getText();
-    const match1 = /^#ifndef\s+(\S+)\s*$/m.exec(text);
-    const match2 = /^#define\s+(\S+)\s*$/m.exec(text);
-    const match3_block = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
-    const match3_line = /^#endif\s+\/\/\s+(\S+)\s*$/m.exec(text);
+  const document = editor.document;
+  const text = document.getText();
+  const match1 = /^#ifndef\s+(\S+)\s*$/m.exec(text);
+  const match2 = /^#define\s+(\S+)\s*$/m.exec(text);
+  const match3_block = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
+  const match3_line = /^#endif\s+\/\/\s+(\S+)\s*$/m.exec(text);
 
-    let match3 = match3_block;
-    if (match3_block === null && match3_line !== null) {
-        match3 = match3_line;
-    }
+  let match3 = match3_block;
+  if (match3_block === null && match3_line !== null) {
+    match3 = match3_line;
+  }
 
-    if (match1 === null || match2 === null || match3 === null) {
-        return [];
-    }
+  if (match1 === null || match2 === null || match3 === null) {
+    return [];
+  }
 
-    if (match1[1] !== match2[1] || match2[1] !== match3[1]) {
-        return [];
-    }
+  if (match1[1] !== match2[1] || match2[1] !== match3[1]) {
+    return [];
+  }
 
-    if (match1.index > match2.index || match2.index > match3.index) {
-        return [];
-    }
+  if (match1.index > match2.index || match2.index > match3.index) {
+    return [];
+  }
 
-    return [
-        document.positionAt(match1.index).line,
-        document.positionAt(match2.index).line,
-        document.positionAt(match3.index).line
-    ];
+  return [
+    document.positionAt(match1.index).line,
+    document.positionAt(match2.index).line,
+    document.positionAt(match3.index).line,
+  ];
 }
 
 /**
@@ -221,23 +228,23 @@ function findLinesToRemove(): Array<number> {
  * @returns Promise<boolean>
  */
 async function findAndRemovePragmaOnce(): Promise<boolean> {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return false;
-    }
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return false;
+  }
 
-    const document = editor.document;
-    const text = document.getText();
+  const document = editor.document;
+  const text = document.getText();
 
-    const match = /^#pragma once*$/m.exec(text);
-    if(match === null){
-        return false;
-    }
-    const pos = document.positionAt(match.index).line;
-    return editor.edit(function (edit) {
-        // Remove line.
-            edit.delete(lineToRange(pos));
-    });
+  const match = /^#pragma once*$/m.exec(text);
+  if (match === null) {
+    return false;
+  }
+  const pos = document.positionAt(match.index).line;
+  return editor.edit(function (edit) {
+    // Remove line.
+    edit.delete(lineToRange(pos));
+  });
 }
 
 /**
@@ -248,8 +255,10 @@ async function findAndRemovePragmaOnce(): Promise<boolean> {
  * @returns vscode.Range that represents a whole line.
  */
 function lineToRange(n: number): vscode.Range {
-    return new vscode.Range(
-        new vscode.Position(n, 0), new vscode.Position(n + 1, 0));
+  return new vscode.Range(
+    new vscode.Position(n, 0),
+    new vscode.Position(n + 1, 0)
+  );
 }
 
 // =============================================================================
@@ -260,42 +269,45 @@ function lineToRange(n: number): vscode.Range {
  * Command Handler for 'extension.insertIncludeGuard'.
  * Insert new include guard directives into the current document.
  */
-export async function insertIncludeGuard() : Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return;
+export async function insertIncludeGuard(): Promise<void> {
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return;
+  }
+
+  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const skipComment = config.get<boolean>("Skip Comment Blocks", true);
+  const insertBlankLine = config.get<boolean>("Insert Blank Line", true);
+  const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
+
+  if (removePragmaOnce) {
+    await findAndRemovePragmaOnce();
+  }
+
+  let lineToInsert = 0;
+  if (skipComment) {
+    lineToInsert = findLineToInsert();
+  }
+
+  editor.edit(function (edit) {
+    // Ensure the last line has an line ending.
+    const document = editor.document;
+    const bottomLine = document.lineAt(document.lineCount - 1).text;
+    if (bottomLine.length !== 0) {
+      edit.insert(new vscode.Position(document.lineCount, 0), "\n");
     }
 
-    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const skipComment = config.get<boolean>('Skip Comment Blocks', true);
-    const insertBlankLine = config.get<boolean>('Insert Blank Line', true);
-    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
-
-    if(removePragmaOnce){
-        await findAndRemovePragmaOnce();
+    // Insert include guard directives.
+    const directives = createDirectives();
+    if (lineToInsert !== 0 && insertBlankLine) {
+      directives[0] = "\n" + directives[0];
     }
-
-    let lineToInsert = 0;
-    if (skipComment) {
-        lineToInsert = findLineToInsert();
-    }
-
-    editor.edit(function (edit) {
-        // Ensure the last line has an line ending.
-        const document = editor.document;
-        const bottomLine = document.lineAt(document.lineCount - 1).text;
-        if (bottomLine.length !== 0) {
-            edit.insert(new vscode.Position(document.lineCount, 0), '\n');
-        }
-
-        // Insert include guard directives.
-        const directives = createDirectives();
-        if (lineToInsert !== 0 && insertBlankLine) {
-            directives[0] = '\n' + directives[0];
-        }
-        edit.insert(new vscode.Position(lineToInsert, 0), directives[0] + directives[1]);
-        edit.insert(new vscode.Position(document.lineCount, 0), directives[2]);
-    });
+    edit.insert(
+      new vscode.Position(lineToInsert, 0),
+      directives[0] + directives[1]
+    );
+    edit.insert(new vscode.Position(document.lineCount, 0), directives[2]);
+  });
 }
 
 /**
@@ -303,28 +315,28 @@ export async function insertIncludeGuard() : Promise<void> {
  * Remove existing include guard directives from the current document.
  */
 export async function removeIncludeGuard(): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return;
-    }
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return;
+  }
 
-    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
+  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
 
-    if(removePragmaOnce){
-        await findAndRemovePragmaOnce();
-    }
+  if (removePragmaOnce) {
+    await findAndRemovePragmaOnce();
+  }
 
-    // If include guard directives have been found ...
-    const linesToRemove = findLinesToRemove();
-    if (linesToRemove.length !== 0) {
-        editor.edit(function (edit) {
-            // Remove them.
-            for (let i = 0; i < 3; ++i) {
-                edit.delete(lineToRange(linesToRemove[i]));
-            }
-        });
-    }
+  // If include guard directives have been found ...
+  const linesToRemove = findLinesToRemove();
+  if (linesToRemove.length !== 0) {
+    editor.edit(function (edit) {
+      // Remove them.
+      for (let i = 0; i < 3; ++i) {
+        edit.delete(lineToRange(linesToRemove[i]));
+      }
+    });
+  }
 }
 
 /**
@@ -332,31 +344,30 @@ export async function removeIncludeGuard(): Promise<void> {
  * Replace existing include guard directives with new ones.
  */
 export async function updateIncludeGuard(): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (editor === undefined) {
-        return;
-    }
-    
-    const config = vscode.workspace.getConfiguration('C/C++ Include Guard');
-    const removePragmaOnce = config.get<boolean>('Remove Pragma Once', true);
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return;
+  }
 
-    if(removePragmaOnce){
-        await findAndRemovePragmaOnce();
-    }
+  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
 
-    // If include guard directives have been found ...
-    const linesToRemove = findLinesToRemove();
-    if (linesToRemove.length !== 0) {
-        editor.edit(function (edit) {
-            // Replace them with new ones.
-            const directives = createDirectives();
-            for (let i = 0; i < 3; ++i) {
-                edit.replace(lineToRange(linesToRemove[i]), directives[i]);
-            }
-        });
-    }
-    else {
-        // Or just insert the new directives if old ones have not been found.
-        insertIncludeGuard();
-    }
+  if (removePragmaOnce) {
+    await findAndRemovePragmaOnce();
+  }
+
+  // If include guard directives have been found ...
+  const linesToRemove = findLinesToRemove();
+  if (linesToRemove.length !== 0) {
+    editor.edit(function (edit) {
+      // Replace them with new ones.
+      const directives = createDirectives();
+      for (let i = 0; i < 3; ++i) {
+        edit.replace(lineToRange(linesToRemove[i]), directives[i]);
+      }
+    });
+  } else {
+    // Or just insert the new directives if old ones have not been found.
+    insertIncludeGuard();
+  }
 }
