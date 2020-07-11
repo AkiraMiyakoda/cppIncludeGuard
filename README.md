@@ -31,7 +31,7 @@ Update existing include guard
 #define FOO_BAR_UTILS_H
 ```
 
-* Selectable comment style on ```#endif```. Block or line.
+* Selectable comment style on ```#endif```. Block, line or none.
 
 ```C
 /* Block comment. */
@@ -39,6 +39,9 @@ Update existing include guard
 
 // Line comment.
 #endif // B93E7584_5E15_48C3_9D9C_92263000BF7B
+
+// Without comment.
+#endif
 ```
 
 * Prevents GUIDs from starting with a decimal number. (Optional)
