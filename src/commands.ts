@@ -131,15 +131,17 @@ function createDirectives(): Array<string> {
 
   macroName = macroPrefix + macroName + macroSuffix;
 
-  let endifLine = "#endif /* " + macroName + " */\n";
-  if (commentStyle === "Line") {
-    endifLine = "#endif // " + macroName + "\n";
+  let endifLine = "#endif";
+  if (commentStyle === "Block") {
+    endifLine += " /* " + macroName + " */";
+  } else if (commentStyle === "Line") {
+    endifLine += " // " + macroName;
   }
 
   return [
     "#ifndef " + macroName + "\n",
     "#define " + macroName + "\n",
-    endifLine,
+    endifLine + "\n",
   ];
 }
 
@@ -197,28 +199,42 @@ function findLinesToRemove(): Array<number> {
   const match2 = /^#define\s+(\S+)\s*$/m.exec(text);
   const match3_block = /^#endif\s+\/\*\s+(\S+)\s*\*\/\s*$/m.exec(text);
   const match3_line = /^#endif\s+\/\/\s+(\S+)\s*$/m.exec(text);
+  const match3_none = [...text.matchAll(/^#endif\s*$/gm)];
 
-  let match3 = match3_block;
-  if (match3_block === null && match3_line !== null) {
-    match3 = match3_line;
-  }
-
-  if (match1 === null || match2 === null || match3 === null) {
+  let match3Index;
+  let match3Macro;
+  if (match3_block !== null) {
+    match3Index = match3_block.index;
+    match3Macro = match3_block[1];
+  } else if (match3_line !== null) {
+    match3Index = match3_line.index;
+    match3Macro = match3_line[1];
+  } else if (match3_none.length > 0) {
+    match3Index = match3_none[match3_none.length - 1].index;
+  } else {
     return [];
   }
 
-  if (match1[1] !== match2[1] || match2[1] !== match3[1]) {
+  if (!match1 || !match2 || match3Index === undefined) {
     return [];
   }
 
-  if (match1.index > match2.index || match2.index > match3.index) {
+  if (match1[1] !== match2[1]) {
+    return [];
+  }
+
+  if (match3Macro !== undefined && match2[1] !== match3Macro) {
+    return [];
+  }
+
+  if (match1.index > match2.index || match2.index > match3Index) {
     return [];
   }
 
   return [
     document.positionAt(match1.index).line,
     document.positionAt(match2.index).line,
-    document.positionAt(match3.index).line,
+    document.positionAt(match3Index).line,
   ];
 }
 

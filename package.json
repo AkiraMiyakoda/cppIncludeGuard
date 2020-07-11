@@ -99,11 +99,13 @@
 					"type": "string",
 					"enum": [
 						"Block",
-						"Line"
+						"Line",
+						"None"
 					],
 					"enumDescriptions": [
 						"Block Comment /* */",
-						"Line Comment //"
+						"Line Comment //",
+						"No Comment"
 					],
 					"default": "Block",
 					"description": "Comment style for #endif line"
