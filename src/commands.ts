@@ -6,6 +6,8 @@
  */
 
 import * as vscode from "vscode";
+import { v4 as uuidv4 } from "uuid";
+import * as path from "path";
 
 // =============================================================================
 //  Internal functions
@@ -18,7 +20,6 @@ import * as vscode from "vscode";
  * @returns Macro name. All upprecase. Separated by underscores.
  */
 function fromGUID(preventDecimal: boolean): string {
-  const { v4: uuidv4 } = require("uuid");
   let uuid = uuidv4();
 
   // Prevent a macro from starting with a decimal number.
@@ -27,7 +28,7 @@ function fromGUID(preventDecimal: boolean): string {
     uuid = ((digit % 6) + 10).toString(16) + uuid.substr(1);
   }
 
-  return uuid.toUpperCase().replace(/\-/g, "_");
+  return uuid.toUpperCase().replace(/-/g, "_");
 }
 
 /**
@@ -59,15 +60,13 @@ function fromFileName(
     return "";
   }
 
-  const path = require("path");
-
   let fileName = documentUri.toString();
   if (fullPath && baseUri !== undefined) {
     fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
     if (pathDepth > 0) {
       let index: number;
-      let count: number = 0;
+      let count = 0;
       for (index = fileName.length - 1; index >= 0; --index) {
         if (fileName.charAt(index) === "/") {
           count++;

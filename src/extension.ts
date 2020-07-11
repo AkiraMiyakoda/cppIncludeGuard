@@ -6,13 +6,13 @@
  */
 
 import * as vscode from "vscode";
+import * as commands from "./commands";
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
   console.log(
     'Congratulations, your extension "cppIncludeGuard" is now active!'
   );
 
-  const commands = require("./commands");
   context.subscriptions.push(
     vscode.commands.registerCommand("extension.insertIncludeGuard", () =>
       commands.insertIncludeGuard()
@@ -25,6 +25,3 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 }
-
-// this method is called when your extension is deactivated
-export function deactivate() {}
