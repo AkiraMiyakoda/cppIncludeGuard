@@ -11,9 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.insertIncludeGuard",
-		"onCommand:extension.removeIncludeGuard",
-		"onCommand:extension.updateIncludeGuard"
+		"onStartupFinished"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

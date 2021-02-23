@@ -24,4 +24,25 @@ export function activate(context: vscode.ExtensionContext): void {
       commands.updateIncludeGuard()
     )
   );
+
+    /*When adding a new header file, automatically invoke insertIncludeGuard() */
+    vscode.workspace.onDidCreateFiles(
+        async (event) =>
+        {
+            const headerExtensions = [".h", ".hpp", ".h++", ".hh"];
+            for (const newFile of event.files)
+            {
+                for (const headerExtension of headerExtensions)
+                {
+                    if (newFile.fsPath.endsWith(headerExtension))
+                    {
+                        vscode.workspace.openTextDocument(newFile).then(doc =>
+                            vscode.window.showTextDocument(doc).then(commands.insertIncludeGuard)
+                        );
+                        break;
+                    }
+                }
+            }
+        }
+    )
 }
