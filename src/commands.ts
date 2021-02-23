@@ -290,6 +290,8 @@ export async function insertIncludeGuard(): Promise<void> {
   if (editor === undefined) {
     return;
   }
+  //add 2 lines of delta to current cursor position, which will be the position after adding include guard
+  const cursorPosition = editor.selection.active.translate(2); 
 
   const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
   const skipComment = config.get<boolean>("Skip Comment Blocks", true);
@@ -305,7 +307,7 @@ export async function insertIncludeGuard(): Promise<void> {
     lineToInsert = findLineToInsert();
   }
 
-  editor.edit(function (edit) {
+  await editor.edit(function (edit) {
     // Ensure the last line has an line ending.
     const document = editor.document;
     const bottomLine = document.lineAt(document.lineCount - 1).text;
@@ -322,8 +324,9 @@ export async function insertIncludeGuard(): Promise<void> {
       new vscode.Position(lineToInsert, 0),
       directives[0] + directives[1]
     );
-    edit.insert(new vscode.Position(document.lineCount, 0), directives[2]);
+    edit.insert(new vscode.Position(document.lineCount, 0), "\n\n" + directives[2]);//add 2 extra blank lines before #endif -> issue #9
   });
+  editor.selection = new vscode.Selection(cursorPosition, cursorPosition); //move back cursor to the original position -> issue #9
 }
 
 /**
