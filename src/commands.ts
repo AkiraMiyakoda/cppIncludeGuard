@@ -324,9 +324,9 @@ export async function insertIncludeGuard(): Promise<void> {
       new vscode.Position(lineToInsert, 0),
       directives[0] + directives[1]
     );
-    edit.insert(new vscode.Position(document.lineCount, 0), "\n\n" + directives[2]);//add 2 extra blank lines before #endif -> issue #9
+    edit.insert(new vscode.Position(document.lineCount, 0), "\n\n" + directives[2]);//add 2 extra blank lines before #endif -> issue #8
   });
-  editor.selection = new vscode.Selection(cursorPosition, cursorPosition); //move back cursor to the original position -> issue #9
+  editor.selection = new vscode.Selection(cursorPosition, cursorPosition); //move back cursor to the original position -> issue #8
 }
 
 /**
