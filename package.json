@@ -33,6 +33,11 @@
 			"title": "C/C++ Include Guard",
 			"type": "object",
 			"properties": {
+				"C/C++ Include Guard.Auto Include Guard Insertion For New File": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically insert the include guard when adding a new header file"
+				},
 				"C/C++ Include Guard.Macro Type": {
 					"type": "string",
 					"enum": [

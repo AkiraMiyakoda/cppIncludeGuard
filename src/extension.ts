@@ -26,23 +26,27 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
     /*When adding a new header file, automatically invoke insertIncludeGuard() */
+
     vscode.workspace.onDidCreateFiles(
         async (event) =>
         {
-            const headerExtensions = [".h", ".hpp", ".h++", ".hh"];
-            for (const newFile of event.files)
+            if (vscode.workspace.getConfiguration("C/C++ Include Guard").get<boolean>("Auto Include Guard Insertion For New File"))
             {
-                for (const headerExtension of headerExtensions)
+                const headerExtensions = [".h", ".hpp", ".h++", ".hh"];
+                for (const newFile of event.files)
                 {
-                    if (newFile.fsPath.endsWith(headerExtension))
+                    for (const headerExtension of headerExtensions)
                     {
-                        vscode.workspace.openTextDocument(newFile).then(doc =>
-                            vscode.window.showTextDocument(doc).then(commands.insertIncludeGuard)
-                        );
-                        break;
+                        if (newFile.fsPath.endsWith(headerExtension))
+                        {
+                            vscode.workspace.openTextDocument(newFile).then(doc =>
+                                vscode.window.showTextDocument(doc).then(commands.insertIncludeGuard)
+                            );
+                            break;
+                        }
                     }
                 }
             }
         }
-    )
+    );
 }
