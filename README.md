@@ -9,6 +9,10 @@ The **C/C++ Include Guard** extension enables you to add, remove or update [incl
 Thanks to contributor: **@erkan-ozkan**
 
 ## Screenshots
+Automatically insert include guard when creating a new header file
+
+![Automatic Insert](images/auto-insert.gif)
+
 
 Insert and Remove include guard
 
