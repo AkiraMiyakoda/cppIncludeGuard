@@ -362,7 +362,7 @@ export async function removeIncludeGuard(): Promise<void> {
  * Command Handler for 'extension.updateIncludeGuard'.
  * Replace existing include guard directives with new ones.
  */
-export async function updateIncludeGuard(): Promise<void> {
+export async function updateIncludeGuard(insertWhenNotFound = true): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   if (editor === undefined) {
     return;
@@ -371,7 +371,7 @@ export async function updateIncludeGuard(): Promise<void> {
   const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
 
-  if (removePragmaOnce) {
+  if (removePragmaOnce && insertWhenNotFound) {
     await findAndRemovePragmaOnce();
   }
 
@@ -387,6 +387,7 @@ export async function updateIncludeGuard(): Promise<void> {
     });
   } else {
     // Or just insert the new directives if old ones have not been found.
-    insertIncludeGuard();
+    if(insertWhenNotFound)
+      insertIncludeGuard();
   }
 }

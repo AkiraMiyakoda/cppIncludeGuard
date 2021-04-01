@@ -22,6 +22,10 @@ Update existing include guard
 
 ![Update existing](https://github.com/AkiraMiyakoda/cppIncludeGuard/raw/master/images/update.gif)
 
+Automatically update include guard when renaming a header file
+
+![Automatic updating](images/auto-update.gif)
+
 ## Features
 
 * Generates include guard macros from GUID (or UUID v4), file name or file path. All non-alphanumeric characters are replaced with underscores.
