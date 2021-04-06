@@ -96,12 +96,12 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
     //When the file is not currently shown in text editor, it should be automatically updated when it is opened
-    vscode.workspace.onDidOpenTextDocument(document =>
+    vscode.workspace.onDidOpenTextDocument(async document =>
     {
-        if(shouldUpdateGuard() && isHeader(document.uri))
+        if (shouldUpdateGuard() && isHeader(document.uri))
         {
-            vscode.window.showTextDocument(document).then(() => commands.updateIncludeGuard(false));
-                                                                                            //^ Do not insert include guard when there is none found
+            await commands.updateIncludeGuard(false);
+                                                //^ Do not insert include guard when there is none found
         }
     });
 }
