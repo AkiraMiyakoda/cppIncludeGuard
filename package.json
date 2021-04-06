@@ -38,7 +38,7 @@
 					"default": true,
 					"description": "Automatically insert the include guard when adding a new header file"
 				},
-				"C/C++ Include Guard.Auto Update Include Guard":{
+				"C/C++ Include Guard.Auto Update Include Guard": {
 					"type": "boolean",
 					"default": true,
 					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`"
