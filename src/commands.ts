@@ -65,17 +65,13 @@ function fromFileName(
     fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
     if (pathDepth > 0) {
-      let index: number;
-      let count = 0;
-      for (index = fileName.length - 1; index >= 0; --index) {
-        if (fileName.charAt(index) === "/") {
-          count++;
-          if (count === pathDepth + 1) {
-            fileName = fileName.substr(index + 1);
-            break;
-          }
-        }
-      }
+      const folderSep = "/";
+      let pathSegments = fileName.split(folderSep);
+
+      // Keep only the last pathDepth folders and the file segment
+      pathSegments = pathSegments.slice(-(pathDepth + 1));
+
+      fileName = pathSegments.join(folderSep);
     }
   } else {
     fileName = path.basename(fileName);
