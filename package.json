@@ -63,6 +63,11 @@
 					"default": "0",
 					"description": "Number of folders which should be used for include guard. Disabled with 0."
 				},
+				"C/C++ Include Guard.Path Skip": {
+					"type": "number",
+					"default": "0",
+					"description": "Number of folders below the workspace root that should be skipped for include guard. Disabled with 0."
+				},
 				"C/C++ Include Guard.Remove Pragma Once": {
 					"type": "boolean",
 					"default": "true",

@@ -46,6 +46,7 @@ function fromGUID(preventDecimal: boolean): string {
 function fromFileName(
   fullPath: boolean,
   pathDepth: number,
+  pathSkip: number,
   shortenUnderscores: boolean,
   removeExtension: boolean
 ): string {
@@ -62,11 +63,15 @@ function fromFileName(
 
   let fileName = documentUri.toString();
   if (fullPath && baseUri !== undefined) {
+    // Convert to path relative to baseUri
     fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
     if (pathDepth > 0) {
       const folderSep = "/";
       let pathSegments = fileName.split(folderSep);
+
+      // Discard the first pathSkip segments (but always keep at least one!)
+      pathSegments = pathSegments.slice(Math.min(pathSkip, pathSegments.length - 1));
 
       // Keep only the last pathDepth folders and the file segment
       pathSegments = pathSegments.slice(-(pathDepth + 1));
@@ -105,12 +110,14 @@ function createDirectives(): Array<string> {
   const removeExtension = config.get<boolean>("Remove Extension", false);
   const commentStyle = config.get<string>("Comment Style", "Block");
   const pathDepth = config.get<number>("Path Depth", 0);
+  const pathSkip = config.get<number>("Path Skip", 0);
 
   let macroName: string;
   if (macroType === "Filename") {
     macroName = fromFileName(
       false,
       pathDepth,
+      pathSkip,
       shortenUnderscores,
       removeExtension
     );
@@ -118,6 +125,7 @@ function createDirectives(): Array<string> {
     macroName = fromFileName(
       true,
       pathDepth,
+      pathSkip,
       shortenUnderscores,
       removeExtension
     );
