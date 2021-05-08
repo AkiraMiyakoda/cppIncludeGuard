@@ -6,7 +6,7 @@
 
 The **C/C++ Include Guard** extension enables you to add, remove or update [include guard macros](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Include_Guard_Macro) to your C/C++ header files in one go.
 
-Thanks to contributors: **@erkan-ozkan**, **@HO-COOH**
+Thanks to contributors: **@erkan-ozkan**, **@HO-COOH**, **@sleiner**
 
 ## Screenshots
 Automatically insert include guard when creating a new header file
