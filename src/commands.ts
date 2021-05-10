@@ -17,7 +17,7 @@ import * as path from "path";
  * Generates a macro name from UUID v4.
  *
  * @param preventDecimal If true, the returned string never starts with 0-9.
- * @returns Macro name. All upprecase. Separated by underscores.
+ * @returns Macro name. All uppercase. Separated by underscores.
  */
 function fromGUID(preventDecimal: boolean): string {
   let uuid = uuidv4();
@@ -40,7 +40,7 @@ function fromGUID(preventDecimal: boolean): string {
  * @param shortenUnderscores If true, consecutive underscores are shortened into
  *                           one.
  * @param removeExtension If true, the file extension is not used.
- * @returns Macro name. All upprecase. All non-alphanumeric characters are
+ * @returns Macro name. All uppercase. All non-alphanumeric characters are
  *          replaced with underscores.
  */
 function fromFileName(
