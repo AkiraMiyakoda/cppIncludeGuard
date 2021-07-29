@@ -111,6 +111,7 @@ function createDirectives(): Array<string> {
   const commentStyle = config.get<string>("Comment Style", "Block");
   const pathDepth = config.get<number>("Path Depth", 0);
   const pathSkip = config.get<number>("Path Skip", 0);
+  const spacesAfterEndif = config.get<number>("Spaces After Endif", 1);
 
   let macroName: string;
   if (macroType === "Filename") {
@@ -134,12 +135,13 @@ function createDirectives(): Array<string> {
   }
 
   macroName = macroPrefix + macroName + macroSuffix;
+  const spaces = " ".repeat(spacesAfterEndif);
 
   let endifLine = "#endif";
   if (commentStyle === "Block") {
-    endifLine += " /* " + macroName + " */";
+    endifLine += spaces + "/* " + macroName + " */";
   } else if (commentStyle === "Line") {
-    endifLine += " // " + macroName;
+    endifLine += spaces + "// " + macroName;
   }
 
   return [
@@ -295,7 +297,7 @@ export async function insertIncludeGuard(): Promise<void> {
     return;
   }
   //add 2 lines of delta to current cursor position, which will be the position after adding include guard
-  const cursorPosition = editor.selection.active.translate(2); 
+  const cursorPosition = editor.selection.active.translate(2);
 
   const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
   const skipComment = config.get<boolean>("Skip Comment Blocks", true);

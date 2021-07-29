@@ -102,3 +102,5 @@ Automatically update include guard when renaming a header file
 ```
 
 * Removes #pragma once when an include guard is added. (Optional)
+
+* Customizable number of spaces between ```#endif``` and its comment.

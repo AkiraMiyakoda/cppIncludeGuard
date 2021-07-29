@@ -2,7 +2,7 @@
 	"name": "cppincludeguard",
 	"displayName": "C/C++ Include Guard",
 	"description": "Insert C/C++ Include Guard",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.47.0"
@@ -122,6 +122,11 @@
 					],
 					"default": "Block",
 					"markdownDescription": "Comment style for `#endif` line"
+				},
+				"C/C++ Include Guard.Spaces After Endif": {
+					"type": "number",
+					"default": "1",
+					"description": "Number of spaces between #endif and its comment."
 				}
 			}
 		}
