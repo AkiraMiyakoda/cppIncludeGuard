@@ -179,6 +179,7 @@
 	},
 	"keywords": [
 		"c",
-		"c++"
+		"c++",
+		"multi-root ready"
 	]
 }
