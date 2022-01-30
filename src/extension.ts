@@ -15,7 +15,7 @@ import { getConfig } from "./common";
  */
 function isHeader(file: vscode.Uri) : boolean
 {
-    const headerExtensions = getConfig().get<string[]>("Header Extensions", [".h", ".hpp", ".h++", ".hh"]);
+    const headerExtensions = getConfig(file).get<string[]>("Header Extensions", [".h", ".hpp", ".h++", ".hh"]);
     return headerExtensions.some(headerExtension => file.fsPath.endsWith(headerExtension));
 }
 

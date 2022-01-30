@@ -56,7 +56,8 @@
 						".h++",
 						".hh"
 					],
-					"description": "File extensions of header files"
+					"description": "File extensions of header files",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Macro Type": {
 					"type": "string",
