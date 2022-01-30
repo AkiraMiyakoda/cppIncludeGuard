@@ -9,6 +9,7 @@ import * as vscode from "vscode";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
 import { getConfig } from "./common";
+import { SubfolderPrefixDef } from "./SubfolderPrefixDef";
 
 // =============================================================================
 //  Internal functions
@@ -98,6 +99,36 @@ function fromFileName(
   return macro;
 }
 
+function getSubdirectoryPrefix(subfolderPrefixDefs: SubfolderPrefixDef[]): string {
+  if(subfolderPrefixDefs.length === 0) {
+    return "";
+  }
+
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return "";
+  }
+
+  const documentUri = editor.document.uri;
+  const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
+  if (documentUri === undefined
+    || baseUri === undefined) {
+    return "";
+  }
+
+  // Loop over subfolderPrefixDefs
+  for (const subfolderPrefixDef of subfolderPrefixDefs) {
+    // Check if the document is in the subfolder
+    const subfolderPath = path.join(baseUri.uri.fsPath, subfolderPrefixDef.folderPath);
+    const documentPath = documentUri.fsPath;
+    if (documentPath.startsWith(subfolderPath)) {
+      return subfolderPrefixDef.prefix;
+    }
+  }
+
+  return "";
+}
+
 /**
  * Generates include guard directives according to the configuration.
  *
@@ -107,6 +138,7 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const config = getConfig(fileUri);
   const macroType = config.get<string>("Macro Type", "GUID");
   const macroPrefix = config.get<string>("Prefix", "");
+  const macroSubfolderPrefixDefs = config.get<SubfolderPrefixDef[]>("Subfolder Prefixes", []);
   const macroSuffix = config.get<string>("Suffix", "");
   const preventDecimal = config.get<boolean>("Prevent Decimal", true);
   const shortenUnderscores = config.get<boolean>("Shorten Underscores", true);
@@ -137,7 +169,9 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
     macroName = fromGUID(preventDecimal);
   }
 
-  macroName = macroPrefix + macroName + macroSuffix;
+  const macroSubfolderPrefix : string = getSubdirectoryPrefix(macroSubfolderPrefixDefs);
+
+  macroName = macroPrefix + macroSubfolderPrefix +  macroName + macroSuffix;
   const spaces = " ".repeat(spacesAfterEndif);
 
   let endifLine = "#endif";
