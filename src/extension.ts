@@ -7,14 +7,7 @@
 
 import * as vscode from "vscode";
 import * as commands from "./commands";
-
-/**
- * Helper function for getting the config for this extension
- */
-function getConfig()
-{
-    return vscode.workspace.getConfiguration("C/C++ Include Guard");
-}
+import { getConfig } from "./common";
 
 /**
  * Check if the file is a header file
@@ -38,11 +31,11 @@ function isOpenedInEditor(file: vscode.Uri) : boolean
 /**
  * Determine whether automatic updating include guard when renaming the file is enabled
  */
-function shouldUpdateGuard()
+function shouldUpdateGuard(file: vscode.Uri)
 {
-    if (getConfig().get<boolean>("Auto Update Include Guard"))
+    if (getConfig(file).get<boolean>("Auto Update Include Guard"))
     {
-        const macroType = getConfig().get<string>("Macro Type", "GUID");
+        const macroType = getConfig(file).get<string>("Macro Type", "GUID");
         if (macroType === "Filename" || macroType === "Filepath") //only effective when the macro type is either "Filename" or "Filepath"
             return true;
     }
@@ -67,9 +60,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidCreateFiles(
         async (event) =>
         {
-            if (getConfig().get<boolean>("Auto Include Guard Insertion For New File"))
+            for (const newFile of event.files)
             {
-                for (const newFile of event.files)
+                if (getConfig(newFile).get<boolean>("Auto Include Guard Insertion For New File"))
                 {
                     if (isHeader(newFile))
                     {
@@ -86,19 +79,19 @@ export function activate(context: vscode.ExtensionContext) {
     //This event will fire when moving the file & renaming the file
     vscode.workspace.onDidRenameFiles(event =>
     {
-        if (shouldUpdateGuard())
-        {
             for (const renamedFile of event.files)
             {
-                if (isHeader(renamedFile.newUri) && isOpenedInEditor(renamedFile.newUri))
-                    commands.updateIncludeGuard(); //Do insert include guard when there is none found, because user explicitly rename the file
+                if (shouldUpdateGuard(renamedFile.newUri))
+                {
+                    if (isHeader(renamedFile.newUri) && isOpenedInEditor(renamedFile.newUri))
+                        commands.updateIncludeGuard(); //Do insert include guard when there is none found, because user explicitly rename the file
+                }
             }
-        }
     });
     //When the file is not currently shown in text editor, it should be automatically updated when it is opened
     vscode.workspace.onDidOpenTextDocument(async document =>
     {
-        if (shouldUpdateGuard() && isHeader(document.uri))
+        if (shouldUpdateGuard(document.uri) && isHeader(document.uri))
         {
             await commands.updateIncludeGuard(false);
                                                 //^ Do not insert include guard when there is none found

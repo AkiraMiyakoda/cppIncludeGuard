@@ -8,6 +8,7 @@
 import * as vscode from "vscode";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
+import { getConfig } from "./common";
 
 // =============================================================================
 //  Internal functions
@@ -100,8 +101,8 @@ function fromFileName(
  *
  * @returns Array of strings like [ '#ifndef ...', '#define ...', '#endif ...' ].
  */
-function createDirectives(): Array<string> {
-  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+function createDirectives(fileUri: vscode.Uri): Array<string> {
+  const config = getConfig(fileUri);
   const macroType = config.get<string>("Macro Type", "GUID");
   const macroPrefix = config.get<string>("Prefix", "");
   const macroSuffix = config.get<string>("Suffix", "");
@@ -299,7 +300,7 @@ export async function insertIncludeGuard(): Promise<void> {
   //add 2 lines of delta to current cursor position, which will be the position after adding include guard
   const cursorPosition = editor.selection.active.translate(2);
 
-  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const config = getConfig(editor.document.uri);
   const skipComment = config.get<boolean>("Skip Comment Blocks", true);
   const insertBlankLine = config.get<boolean>("Insert Blank Line", true);
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
@@ -322,7 +323,7 @@ export async function insertIncludeGuard(): Promise<void> {
     }
 
     // Insert include guard directives.
-    const directives = createDirectives();
+    const directives = createDirectives(document.uri);
     if (lineToInsert !== 0 && insertBlankLine) {
       directives[0] = "\n" + directives[0];
     }
@@ -345,7 +346,7 @@ export async function removeIncludeGuard(): Promise<void> {
     return;
   }
 
-  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const config = getConfig(editor.document.uri);
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
 
   if (removePragmaOnce) {
@@ -374,7 +375,7 @@ export async function updateIncludeGuard(insertWhenNotFound = true): Promise<voi
     return;
   }
 
-  const config = vscode.workspace.getConfiguration("C/C++ Include Guard");
+  const config = getConfig(editor.document.uri);
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
 
   if (removePragmaOnce && insertWhenNotFound) {
@@ -386,7 +387,7 @@ export async function updateIncludeGuard(insertWhenNotFound = true): Promise<voi
   if (linesToRemove.length !== 0) {
     editor.edit(function (edit) {
       // Replace them with new ones.
-      const directives = createDirectives();
+      const directives = createDirectives(editor.document.uri);
       for (let i = 0; i < 3; ++i) {
         edit.replace(lineToRange(linesToRemove[i]), directives[i]);
       }

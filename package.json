@@ -36,12 +36,14 @@
 				"C/C++ Include Guard.Auto Include Guard Insertion For New File": {
 					"type": "boolean",
 					"default": true,
-					"description": "Automatically insert the include guard when adding a new header file"
+					"description": "Automatically insert the include guard when adding a new header file",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Auto Update Include Guard": {
 					"type": "boolean",
 					"default": true,
-					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`"
+					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Macro Type": {
 					"type": "string",
@@ -56,12 +58,14 @@
 						"File path of the current document. All non-alphanumeric characters are replaced with underscores. Works like Filename outside workspaces."
 					],
 					"default": "GUID",
-					"description": "Source of include guard macros. GUID, Filename or File Path."
+					"description": "Source of include guard macros. GUID, Filename or File Path.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Path Depth": {
 					"type": "number",
 					"default": "0",
-					"description": "Number of folders which should be used for include guard. Disabled with 0."
+					"description": "Number of folders which should be used for include guard. Disabled with 0.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Path Skip": {
 					"type": "number",
@@ -71,42 +75,50 @@
 				"C/C++ Include Guard.Remove Pragma Once": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Removes #pragma once directive if detected"
+					"description": "Removes #pragma once directive if detected",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Prevent Decimal": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Prevent GUIDs from starting with a decimal number."
+					"description": "Prevent GUIDs from starting with a decimal number.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Prefix": {
 					"type": "string",
 					"default": "",
-					"description": "Prefix added to include guard macros."
+					"description": "Prefix added to include guard macros.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Suffix": {
 					"type": "string",
 					"default": "",
-					"description": "Suffix added to include guard macros."
+					"description": "Suffix added to include guard macros.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Skip Comment Blocks": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Insert include guard beneath the first comment blocks."
+					"description": "Insert include guard beneath the first comment blocks.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Insert Blank Line": {
 					"type": "boolean",
 					"default": "false",
-					"description": "Insert a blank line after the first comment blocks."
+					"description": "Insert a blank line after the first comment blocks.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Shorten Underscores": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Shorten multiple underscores in filenames or file paths."
+					"description": "Shorten multiple underscores in filenames or file paths.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Remove Extension": {
 					"type": "boolean",
 					"default": "false",
-					"description": "Remove file extension from include guard macros."
+					"description": "Remove file extension from include guard macros.",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Comment Style": {
 					"type": "string",
@@ -121,12 +133,14 @@
 						"No Comment"
 					],
 					"default": "Block",
-					"markdownDescription": "Comment style for `#endif` line"
+					"markdownDescription": "Comment style for `#endif` line",
+					"scope": "resource"
 				},
 				"C/C++ Include Guard.Spaces After Endif": {
 					"type": "number",
 					"default": "1",
-					"description": "Number of spaces between #endif and its comment."
+					"description": "Number of spaces between #endif and its comment.",
+					"scope": "resource"
 				}
 			}
 		}
