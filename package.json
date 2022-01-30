@@ -45,6 +45,19 @@
 					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`",
 					"scope": "resource"
 				},
+				"C/C++ Include Guard.Header Extensions": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [
+						".h",
+						".hpp",
+						".h++",
+						".hh"
+					],
+					"description": "File extensions of header files"
+				},
 				"C/C++ Include Guard.Macro Type": {
 					"type": "string",
 					"enum": [
