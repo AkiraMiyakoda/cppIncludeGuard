@@ -67,15 +67,17 @@ function fromFileName(
     // Convert to path relative to baseUri
     fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
-    if (pathDepth > 0) {
+    if (pathDepth > 0 || pathSkip > 0) {
       const folderSep = "/";
       let pathSegments = fileName.split(folderSep);
 
       // Discard the first pathSkip segments (but always keep at least one!)
       pathSegments = pathSegments.slice(Math.min(pathSkip, pathSegments.length - 1));
 
-      // Keep only the last pathDepth folders and the file segment
-      pathSegments = pathSegments.slice(-(pathDepth + 1));
+      if(pathDepth > 0) {
+        // Keep only the last pathDepth folders and the file segment
+        pathSegments = pathSegments.slice(-(pathDepth + 1));
+      }
 
       fileName = pathSegments.join(folderSep);
     }
