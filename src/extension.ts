@@ -33,12 +33,50 @@ function isOpenedInEditor(file: vscode.Uri) : boolean
  */
 function shouldUpdateGuard(file: vscode.Uri)
 {
-    if (getConfig(file).get<boolean>("Auto Update Include Guard"))
+    if (!getConfig(file).get<boolean>("Auto Update Include Guard"))
     {
-        const macroType = getConfig(file).get<string>("Macro Type", "GUID");
-        if (macroType === "Filename" || macroType === "Filepath") //only effective when the macro type is either "Filename" or "Filepath"
-            return true;
+        return false;
     }
+
+    const macroType = getConfig(file).get<string>("Macro Type", "GUID");
+    if (macroType === "Filename" || macroType === "Filepath") { //only effective when the macro type is either "Filename" or "Filepath"
+        if(shouldAutoIncludeGuardInFile(file)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Determine whether the include guard should be automatically included.
+ * @param file Uri of the file
+ * @return true if the include guard should be automatically included, false otherwise
+ */
+function shouldAutoIncludeGuardInFile(file: vscode.Uri): boolean {
+    const baseUri = vscode.workspace.getWorkspaceFolder(file);
+    if (baseUri === undefined) {
+        // Whitelist and blacklist are relative to workspace root. If workspace uri is not found,
+        // assume we shouldn't auto update include guard.
+        return false;
+    }
+
+    const whitelist: string[] = getConfig(file).get<string[]>("Auto Update Path Whitelist", []);
+    const blacklist: string[] = getConfig(file).get<string[]>("Auto Update Path Blacklist", []);
+
+    // If the whitelist is empty, assume all files are included in the whitelist.
+    // Whitelist and blacklist are relative to the workspace root. Need to
+    // take workspace root into account, since the workspace root is not
+    // included in the whitelist and blacklist paths.
+    const relativePath = file.toString().substring(baseUri.uri.toString().length + 1);
+    if (whitelist.length === 0 || whitelist.some(path => relativePath.startsWith(path))) {
+        // If the file is in the whitelist, or the whitelist is empty,
+        // check if the file is in the blacklist.
+        if(!blacklist.some(path => relativePath.startsWith(path))) {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -62,9 +100,9 @@ export function activate(context: vscode.ExtensionContext) {
         {
             for (const newFile of event.files)
             {
-                if (getConfig(newFile).get<boolean>("Auto Include Guard Insertion For New File"))
-                {
-                    if (isHeader(newFile))
+                if(getConfig(newFile).get<boolean>("Auto Include Guard Insertion For New File", true)) {
+                    if (shouldAutoIncludeGuardInFile(newFile)
+                        && isHeader(newFile))
                     {
                         vscode.workspace.openTextDocument(newFile).then(doc =>
                             vscode.window.showTextDocument(doc).then(commands.insertIncludeGuard)
@@ -79,14 +117,14 @@ export function activate(context: vscode.ExtensionContext) {
     //This event will fire when moving the file & renaming the file
     vscode.workspace.onDidRenameFiles(event =>
     {
-            for (const renamedFile of event.files)
+        for (const renamedFile of event.files)
+        {
+            if (shouldUpdateGuard(renamedFile.newUri))
             {
-                if (shouldUpdateGuard(renamedFile.newUri))
-                {
-                    if (isHeader(renamedFile.newUri) && isOpenedInEditor(renamedFile.newUri))
-                        commands.updateIncludeGuard(); //Do insert include guard when there is none found, because user explicitly rename the file
-                }
+                if (isHeader(renamedFile.newUri) && isOpenedInEditor(renamedFile.newUri))
+                    commands.updateIncludeGuard(); //Do insert include guard when there is none found, because user explicitly rename the file
             }
+        }
     });
     //When the file is not currently shown in text editor, it should be automatically updated when it is opened
     vscode.workspace.onDidOpenTextDocument(async document =>
