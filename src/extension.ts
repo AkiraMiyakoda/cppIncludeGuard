@@ -56,23 +56,23 @@ function shouldUpdateGuard(file: vscode.Uri)
 function shouldAutoIncludeGuardInFile(file: vscode.Uri): boolean {
     const baseUri = vscode.workspace.getWorkspaceFolder(file);
     if (baseUri === undefined) {
-        // Whitelist and blacklist are relative to workspace root. If workspace uri is not found,
+        // Allowlist and blocklist are relative to workspace root. If workspace uri is not found,
         // assume we shouldn't auto update include guard.
         return false;
     }
 
-    const whitelist: string[] = getConfig(file).get<string[]>("Auto Update Path Whitelist", []);
-    const blacklist: string[] = getConfig(file).get<string[]>("Auto Update Path Blacklist", []);
+    const allowlist: string[] = getConfig(file).get<string[]>("Auto Update Path Allowlist", []);
+    const blocklist: string[] = getConfig(file).get<string[]>("Auto Update Path Blocklist", []);
 
-    // If the whitelist is empty, assume all files are included in the whitelist.
-    // Whitelist and blacklist are relative to the workspace root. Need to
+    // If the allowlist is empty, assume all files are included in the allowlist.
+    // Allowlist and blocklist are relative to the workspace root. Need to
     // take workspace root into account, since the workspace root is not
-    // included in the whitelist and blacklist paths.
+    // included in the allowlist and blocklist paths.
     const relativePath = file.toString().substring(baseUri.uri.toString().length + 1);
-    if (whitelist.length === 0 || whitelist.some(path => relativePath.startsWith(path))) {
-        // If the file is in the whitelist, or the whitelist is empty,
-        // check if the file is in the blacklist.
-        if(!blacklist.some(path => relativePath.startsWith(path))) {
+    if (allowlist.length === 0 || allowlist.some(path => relativePath.startsWith(path))) {
+        // If the file is in the allowlist, or the allowlist is empty,
+        // check if the file is in the blocklist.
+        if(!blocklist.some(path => relativePath.startsWith(path))) {
             return true;
         }
     }
