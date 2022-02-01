@@ -45,6 +45,22 @@
 					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`",
 					"scope": "resource"
 				},
+				"C/C++ Include Guard.Auto Update Path Allowlist": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "A list of path roots that will be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled. If empty, all paths are included by default.",
+					"scope": "resource"
+				},
+				"C/C++ Include Guard.Auto Update Path Blocklist": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "A list of path roots that will not be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled.",
+					"scope": "resource"
+				},
 				"C/C++ Include Guard.Header Extensions": {
 					"type": "array",
 					"items": {
