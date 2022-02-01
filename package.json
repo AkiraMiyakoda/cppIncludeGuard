@@ -101,8 +101,31 @@
 				"C/C++ Include Guard.Prefix": {
 					"type": "string",
 					"default": "",
-					"description": "Prefix added to include guard macros.",
+					"description": "Prefix added to include guard macros. Prefix will be concatenated to the beginning of the subfolder prefix.",
 					"scope": "resource"
+				},
+				"C/C++ Include Guard.Subfolder Prefixes": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"folderPath": {
+								"type": "string",
+								"description": "Folder path relative to the workspace root."
+							},
+							"prefix": {
+								"type": "string",
+								"description": "Prefix added to include guard macros."
+							}
+						},
+						"required": [
+							"folderPath",
+							"prefix"
+						],
+						"additionalProperties": false
+					},
+					"default": [],
+					"description": "Prefix added to include guard macros when file is in a subfolder of the workspace root."
 				},
 				"C/C++ Include Guard.Suffix": {
 					"type": "string",
