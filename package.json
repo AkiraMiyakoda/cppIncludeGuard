@@ -91,6 +91,12 @@
 					"description": "Source of include guard macros. GUID, Filename or File Path.",
 					"scope": "resource"
 				},
+				"C/C++ Include Guard.File Path Pascal Case to Snake Case": {
+					"type": "boolean",
+					"default": false,
+					"description": "Converts camelCase/PascalCase directores/filenames to snake_case.",
+					"scope": "resource"
+				},
 				"C/C++ Include Guard.Path Depth": {
 					"type": "number",
 					"default": "0",

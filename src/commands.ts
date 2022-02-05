@@ -42,6 +42,7 @@ function fromGUID(preventDecimal: boolean): string {
  * @param shortenUnderscores If true, consecutive underscores are shortened into
  *                           one.
  * @param removeExtension If true, the file extension is not used.
+ * @param convertPathToSnakeCase If true, the file name is converted from camelCase/PascalCase to snake_case.
  * @returns Macro name. All uppercase. All non-alphanumeric characters are
  *          replaced with underscores.
  */
@@ -50,7 +51,8 @@ function fromFileName(
   pathDepth: number,
   pathSkip: number,
   shortenUnderscores: boolean,
-  removeExtension: boolean
+  removeExtension: boolean,
+  convertPathToSnakeCase: boolean
 ): string {
   const editor = vscode.window.activeTextEditor;
   if (editor === undefined) {
@@ -68,7 +70,7 @@ function fromFileName(
     // Convert to path relative to baseUri
     fileName = fileName.substr(baseUri.uri.toString().length + 1);
 
-    if (pathDepth > 0 || pathSkip > 0) {
+    if (pathDepth > 0 || pathSkip > 0 || convertPathToSnakeCase) {
       const folderSep = "/";
       let pathSegments = fileName.split(folderSep);
 
@@ -80,10 +82,17 @@ function fromFileName(
         pathSegments = pathSegments.slice(-(pathDepth + 1));
       }
 
+      if(convertPathToSnakeCase) {
+        pathSegments = pathSegments.map(convertPascalCaseToSnakeCase);
+      }
+
       fileName = pathSegments.join(folderSep);
     }
   } else {
     fileName = path.basename(fileName);
+    if(convertPathToSnakeCase) {
+      fileName = convertPascalCaseToSnakeCase(fileName);
+    }
   }
 
   if (removeExtension) {
@@ -97,6 +106,14 @@ function fromFileName(
   }
 
   return macro;
+}
+
+function convertPascalCaseToSnakeCase(str: string): string {
+  // CamelCase to snake_case
+  str = str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+  // PascalCase to snake_case
+  str = str.replace(/([A-Z])([A-Z][a-z])/g, "$1_$2").toLowerCase();
+  return str;
 }
 
 function getSubdirectoryPrefix(subfolderPrefixDefs: SubfolderPrefixDef[]): string {
@@ -147,6 +164,7 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const pathDepth = config.get<number>("Path Depth", 0);
   const pathSkip = config.get<number>("Path Skip", 0);
   const spacesAfterEndif = config.get<number>("Spaces After Endif", 1);
+  const convertPathToSnakeCase = config.get<boolean>("File Path Pascal Case to Snake Case", false);
 
   let macroName: string;
   if (macroType === "Filename") {
@@ -155,7 +173,8 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
       pathDepth,
       pathSkip,
       shortenUnderscores,
-      removeExtension
+      removeExtension,
+      convertPathToSnakeCase
     );
   } else if (macroType === "Filepath") {
     macroName = fromFileName(
@@ -163,7 +182,8 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
       pathDepth,
       pathSkip,
       shortenUnderscores,
-      removeExtension
+      removeExtension,
+      convertPathToSnakeCase
     );
   } else {
     macroName = fromGUID(preventDecimal);
