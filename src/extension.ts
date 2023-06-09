@@ -39,7 +39,7 @@ function shouldUpdateGuard(file: vscode.Uri)
     }
 
     const macroType = getConfig(file).get<string>("Macro Type", "GUID");
-    if (macroType === "Filename" || macroType === "Filepath") { //only effective when the macro type is either "Filename" or "Filepath"
+    if (macroType !== "GUID") { // only effective when the macro has a filename or filepath component
         if(shouldAutoIncludeGuardInFile(file)) {
             return true;
         }

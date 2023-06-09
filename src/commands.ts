@@ -167,31 +167,25 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const convertPathToSnakeCase = config.get<boolean>("File Path Pascal Case to Snake Case", false);
 
   let macroName: string;
-  if (macroType === "Filename") {
+  if (macroType !== "GUID") {
     macroName = fromFileName(
-      false,
+      (macroType === "Filepath"),
       pathDepth,
       pathSkip,
       shortenUnderscores,
       removeExtension,
       convertPathToSnakeCase
     );
-  } else if (macroType === "Filepath") {
-    macroName = fromFileName(
-      true,
-      pathDepth,
-      pathSkip,
-      shortenUnderscores,
-      removeExtension,
-      convertPathToSnakeCase
-    );
+    if (macroType === "Filename and GUID") {
+      macroName += "_" + fromGUID(preventDecimal);
+    }
   } else {
     macroName = fromGUID(preventDecimal);
   }
 
   const macroSubfolderPrefix : string = getSubdirectoryPrefix(macroSubfolderPrefixDefs);
 
-  macroName = macroPrefix + macroSubfolderPrefix +  macroName + macroSuffix;
+  macroName = macroPrefix + macroSubfolderPrefix + macroName + macroSuffix;
   const spaces = " ".repeat(spacesAfterEndif);
 
   let endifLine = "#endif";
