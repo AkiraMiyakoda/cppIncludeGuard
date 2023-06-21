@@ -5,7 +5,7 @@
 	"version": "1.6.0",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Other"
@@ -42,7 +42,7 @@
 				"C/C++ Include Guard.Auto Update Include Guard": {
 					"type": "boolean",
 					"default": true,
-					"markdownDescription": "Automatically update the include guard when renaming a file (only have effect when macro type is `Filename` or `Filepath`",
+					"markdownDescription": "Automatically update the include guard when renaming a file (only effective when macro type is not `GUID`)",
 					"scope": "resource"
 				},
 				"C/C++ Include Guard.Auto Update Path Allowlist": {
@@ -80,17 +80,20 @@
 					"enum": [
 						"GUID",
 						"Filename",
+						"Filename and GUID",
 						"Filepath"
 					],
 					"enumDescriptions": [
 						"Random GUID v4. Separated by underscores.",
 						"File name of the current document. All non-alphanumeric characters are replaced with underscores.",
+						"File name of the current document, followed by GUID, separated by an underscore.",
 						"File path of the current document. All non-alphanumeric characters are replaced with underscores. Works like Filename outside workspaces."
 					],
 					"default": "GUID",
-					"description": "Source of include guard macros. GUID, Filename or File Path.",
+					"description": "Source of include guard macros. GUID, Filename, Filename and GUID, or File path.",
 					"scope": "resource"
 				},
+
 				"C/C++ Include Guard.File Path Pascal Case to Snake Case": {
 					"type": "boolean",
 					"default": false,

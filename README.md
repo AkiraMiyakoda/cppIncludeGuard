@@ -1,6 +1,6 @@
-[![](https://vsmarketplacebadge.apphb.com/version-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
-[![](https://vsmarketplacebadge.apphb.com/downloads-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
+[![](https://vsmarketplacebadges.dev/version-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
+[![](https://vsmarketplacebadges.dev/downloads-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
+[![](https://vsmarketplacebadges.dev/rating-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
 
 # Insert C/C++ Include Guard Macros
 
