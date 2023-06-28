@@ -1,22 +1,21 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es6",
+		"target": "ES2021",
 		"outDir": "out",
-		"lib": [
-			"ES6",
-			"ES2020.String"
-		],
+		"lib": ["ES2021"],
 		"sourceMap": true,
 		"rootDir": "src",
-		"strict": true   /* enable all strict type-checking options */
-		/* Additional Checks */
-		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
-		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-		// "noUnusedParameters": true, /* Report errors on unused parameters. */
+		"noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
+		"strictNullChecks": true /* When type checking, take into account 'null' and 'undefined'. */,
+		"strictFunctionTypes": true /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */,
+		"strictBindCallApply": true /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */,
+		"strictPropertyInitialization": true /* Check for class properties that are declared but not set in the constructor. */,
+		"noImplicitThis": true /* Enable error reporting when 'this' is given the type 'any'. */,
+		"useUnknownInCatchVariables": true /* Default catch clause variables as 'unknown' instead of 'any'. */,
+		"alwaysStrict": true /* Ensure 'use strict' is always emitted. */,
+		"noUnusedLocals": true /* Enable error reporting when local variables aren't read. */,
+		"noUnusedParameters": true /* Raise an error when a function parameter isn't read. */
 	},
-	"exclude": [
-		"node_modules",
-		".vscode-test"
-	]
+	"exclude": ["node_modules", ".vscode-test"]
 }
