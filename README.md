@@ -1,6 +1,8 @@
-[![](https://vsmarketplacebadges.dev/version-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
-[![](https://vsmarketplacebadges.dev/downloads-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
-[![](https://vsmarketplacebadges.dev/rating-short/akiramiyakoda.cppincludeguard.svg)](https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard)
+![GitHub](https://img.shields.io/github/license/AkiraMiyakoda/cppIncludeGuard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2a44d966d64d4dd78c4a03df2cbb13de)](https://app.codacy.com/gh/AkiraMiyakoda/cppIncludeGuard/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/akiramiyakoda.cppincludeguard)
+![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/akiramiyakoda.cppincludeguard)
+![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/akiramiyakoda.cppincludeguard)
 
 # Insert C/C++ Include Guard Macros
 
