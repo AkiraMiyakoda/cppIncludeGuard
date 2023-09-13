@@ -232,7 +232,7 @@
 		"vscode-test": "^1.6.1"
 	},
 	"dependencies": {
-		"uuid": "^9.0.0"
+		"uuid": "^9.0.1"
 	},
 	"publisher": "akiramiyakoda",
 	"repository": {
