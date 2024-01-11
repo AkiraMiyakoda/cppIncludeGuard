@@ -217,7 +217,7 @@
 	"devDependencies": {
 		"@types/glob": "^8.1.0",
 		"@types/mocha": "^10.0.6",
-		"@types/node": "^20.10.8",
+		"@types/node": "^20.11.0",
 		"@types/uuid": "^9.0.7",
 		"@types/vscode": "^1.85.0",
 		"@typescript-eslint/eslint-plugin": "^6.18.1",
