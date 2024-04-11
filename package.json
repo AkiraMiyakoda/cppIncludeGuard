@@ -228,7 +228,7 @@
 		"glob": "^10.3.12",
 		"mocha": "^10.4.0",
 		"prettier": "^3.2.5",
-		"typescript": "^5.4.4",
+		"typescript": "^5.4.5",
 		"vscode-test": "^1.6.1"
 	},
 	"dependencies": {
