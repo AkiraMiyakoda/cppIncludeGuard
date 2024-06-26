@@ -49,6 +49,7 @@ function fromGUID(preventDecimal: boolean): string {
 function fromFileName(
   fullPath: boolean,
   pathDepth: number,
+  pathSeparator: string,
   pathSkip: number,
   shortenUnderscores: boolean,
   removeExtension: boolean,
@@ -100,7 +101,9 @@ function fromFileName(
     fileName = fileName.substring(0, fileName.length - extension.length);
   }
 
-  let macro = fileName.toUpperCase().replace(/[^A-Z0-9]/g, "_");
+  let macro = fileName.toUpperCase()
+                  .replace(/\//g, pathSeparator)
+                  .replace(/[^A-Z0-9]/g, "_");
   if (shortenUnderscores) {
     macro = macro.replace(/_+/g, "_");
   }
@@ -162,6 +165,7 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const removeExtension = config.get<boolean>("Remove Extension", false);
   const commentStyle = config.get<string>("Comment Style", "Block");
   const pathDepth = config.get<number>("Path Depth", 0);
+  const pathSeparator = config.get<string>("Path Separator", "_");
   const pathSkip = config.get<number>("Path Skip", 0);
   const spacesAfterEndif = config.get<number>("Spaces After Endif", 1);
   const convertPathToSnakeCase = config.get<boolean>("File Path Pascal Case to Snake Case", false);
@@ -171,6 +175,7 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
     macroName = fromFileName(
       (macroType === "Filepath"),
       pathDepth,
+      pathSeparator,
       pathSkip,
       shortenUnderscores,
       removeExtension,
