@@ -1,0 +1,24 @@
+name: NPM
+
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+    push:
+
+jobs:
+    pwa:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: .
+        steps:
+            - name: Checkout Crate
+              uses: actions/checkout@v4
+            - name: Set Toolchain
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+            - run: npm ci
+            - run: npm run pretest
