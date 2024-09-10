@@ -5,7 +5,7 @@
 	"version": "1.7.1",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.79.1"
+		"vscode": "^1.93.0"
 	},
 	"categories": [
 		"Other"
@@ -215,23 +215,23 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^8.1.0",
-		"@types/mocha": "^10.0.7",
-		"@types/node": "^22.5.4",
-		"@types/uuid": "^10.0.0",
-		"@types/vscode": "^1.93.0",
-		"@typescript-eslint/eslint-plugin": "^8.4.0",
-		"@typescript-eslint/parser": "^8.4.0",
-		"eslint": "^9.9.1",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
-		"glob": "^11.0.0",
-		"mocha": "^10.7.3",
-		"prettier": "^3.3.3",
-		"typescript": "^5.5.4"
+		"@types/glob": "8.1.0",
+		"@types/mocha": "10.0.7",
+		"@types/node": "22.5.4",
+		"@types/uuid": "10.0.0",
+		"@types/vscode": "1.93.0",
+		"@typescript-eslint/eslint-plugin": "8.5.0",
+		"@typescript-eslint/parser": "8.5.0",
+		"eslint": "9.10.0",
+		"eslint-config-prettier": "9.1.0",
+		"eslint-plugin-prettier": "5.2.1",
+		"glob": "11.0.0",
+		"mocha": "10.7.3",
+		"prettier": "3.3.3",
+		"typescript": "5.6.2"
 	},
 	"dependencies": {
-		"uuid": "^10.0.0"
+		"uuid": "10.0.0"
 	},
 	"publisher": "akiramiyakoda",
 	"repository": {
