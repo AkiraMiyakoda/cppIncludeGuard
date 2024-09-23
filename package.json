@@ -222,7 +222,7 @@
 		"@types/vscode": "1.93.0",
 		"@typescript-eslint/eslint-plugin": "8.5.0",
 		"@typescript-eslint/parser": "8.5.0",
-		"eslint": "9.10.0",
+		"eslint": "9.11.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-prettier": "5.2.1",
 		"glob": "11.0.0",
