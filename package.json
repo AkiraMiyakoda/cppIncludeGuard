@@ -1,251 +1,250 @@
 {
-	"name": "cppincludeguard",
-	"displayName": "C/C++ Include Guard",
-	"description": "Insert C/C++ Include Guard",
-	"version": "1.7.1",
-	"license": "MIT",
-	"engines": {
-		"vscode": "^1.93.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onStartupFinished"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.insertIncludeGuard",
-				"title": "Insert C/C++ Include Guard"
-			},
-			{
-				"command": "extension.removeIncludeGuard",
-				"title": "Remove C/C++ Include Guard"
-			},
-			{
-				"command": "extension.updateIncludeGuard",
-				"title": "Insert or Update C/C++ Include Guard"
-			}
-		],
-		"configuration": {
-			"title": "C/C++ Include Guard",
-			"type": "object",
-			"properties": {
-				"C/C++ Include Guard.Auto Include Guard Insertion For New File": {
-					"type": "boolean",
-					"default": true,
-					"description": "Automatically insert the include guard when adding a new header file",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Auto Update Include Guard": {
-					"type": "boolean",
-					"default": true,
-					"markdownDescription": "Automatically update the include guard when renaming a file (only effective when macro type is not `GUID`)",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Auto Update Path Allowlist": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"description": "A list of path roots that will be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled. If empty, all paths are included by default.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Auto Update Path Blocklist": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"description": "A list of path roots that will not be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Header Extensions": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
-					"default": [
-						".h",
-						".hpp",
-						".h++",
-						".hh"
-					],
-					"description": "File extensions of header files",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Macro Type": {
-					"type": "string",
-					"enum": [
-						"GUID",
-						"Filename",
-						"Filename and GUID",
-						"Filepath"
-					],
-					"enumDescriptions": [
-						"Random GUID v4. Separated by underscores.",
-						"File name of the current document. All non-alphanumeric characters are replaced with underscores.",
-						"File name of the current document, followed by GUID, separated by an underscore.",
-						"File path of the current document. All non-alphanumeric characters are replaced with underscores. Works like Filename outside workspaces."
-					],
-					"default": "GUID",
-					"description": "Source of include guard macros. GUID, Filename, Filename and GUID, or File path.",
-					"scope": "resource"
-				},
-
-				"C/C++ Include Guard.File Path Pascal Case to Snake Case": {
-					"type": "boolean",
-					"default": false,
-					"description": "Converts camelCase/PascalCase directores/filenames to snake_case.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Path Depth": {
-					"type": "number",
-					"default": "0",
-					"description": "Number of folders which should be used for include guard. Disabled with 0.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Path Separator": {
-					"type": "string",
-					"default": "_",
-					"description": "String to replace path separators with when using Filepath Macro Type."
-				},
-				"C/C++ Include Guard.Path Skip": {
-					"type": "number",
-					"default": "0",
-					"description": "Number of folders below the workspace root that should be skipped for include guard. Disabled with 0."
-				},
-				"C/C++ Include Guard.Remove Pragma Once": {
-					"type": "boolean",
-					"default": "true",
-					"description": "Removes #pragma once directive if detected",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Prevent Decimal": {
-					"type": "boolean",
-					"default": "true",
-					"description": "Prevent GUIDs from starting with a decimal number.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Prefix": {
-					"type": "string",
-					"default": "",
-					"description": "Prefix added to include guard macros. Prefix will be concatenated to the beginning of the subfolder prefix.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Subfolder Prefixes": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"folderPath": {
-								"type": "string",
-								"description": "Folder path relative to the workspace root."
-							},
-							"prefix": {
-								"type": "string",
-								"description": "Prefix added to include guard macros."
-							}
-						},
-						"required": [
-							"folderPath",
-							"prefix"
-						],
-						"additionalProperties": false
-					},
-					"default": [],
-					"description": "Prefix added to include guard macros when file is in a subfolder of the workspace root."
-				},
-				"C/C++ Include Guard.Suffix": {
-					"type": "string",
-					"default": "",
-					"description": "Suffix added to include guard macros.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Skip Comment Blocks": {
-					"type": "boolean",
-					"default": "true",
-					"description": "Insert include guard beneath the first comment blocks.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Insert Blank Line": {
-					"type": "boolean",
-					"default": "false",
-					"description": "Insert a blank line after the first comment blocks.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Shorten Underscores": {
-					"type": "boolean",
-					"default": "true",
-					"description": "Shorten multiple underscores in filenames or file paths.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Remove Extension": {
-					"type": "boolean",
-					"default": "false",
-					"description": "Remove file extension from include guard macros.",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Comment Style": {
-					"type": "string",
-					"enum": [
-						"Block",
-						"Line",
-						"None"
-					],
-					"enumDescriptions": [
-						"Block Comment /* */",
-						"Line Comment //",
-						"No Comment"
-					],
-					"default": "Block",
-					"markdownDescription": "Comment style for `#endif` line",
-					"scope": "resource"
-				},
-				"C/C++ Include Guard.Spaces After Endif": {
-					"type": "number",
-					"default": "1",
-					"description": "Number of spaces between #endif and its comment.",
-					"scope": "resource"
-				}
-			}
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "8.1.0",
-		"@types/mocha": "10.0.8",
-		"@types/node": "22.5.5",
-		"@types/uuid": "10.0.0",
-		"@types/vscode": "1.93.0",
-		"@typescript-eslint/eslint-plugin": "8.5.0",
-		"@typescript-eslint/parser": "8.5.0",
-		"eslint": "9.10.0",
-		"eslint-config-prettier": "9.1.0",
-		"eslint-plugin-prettier": "5.2.1",
-		"glob": "11.0.0",
-		"mocha": "10.7.3",
-		"prettier": "3.3.3",
-		"typescript": "5.6.2"
-	},
-	"dependencies": {
-		"uuid": "10.0.0"
-	},
-	"publisher": "akiramiyakoda",
-	"repository": {
-		"url": "https://github.com/AkiraMiyakoda/cppIncludeGuard",
-		"type": "git"
-	},
-	"keywords": [
-		"c",
-		"c++",
-		"multi-root ready"
-	]
+    "name": "cppincludeguard",
+    "displayName": "C/C++ Include Guard",
+    "description": "Insert C/C++ Include Guard",
+    "version": "1.7.1",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.93.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.insertIncludeGuard",
+                "title": "Insert C/C++ Include Guard"
+            },
+            {
+                "command": "extension.removeIncludeGuard",
+                "title": "Remove C/C++ Include Guard"
+            },
+            {
+                "command": "extension.updateIncludeGuard",
+                "title": "Insert or Update C/C++ Include Guard"
+            }
+        ],
+        "configuration": {
+            "title": "C/C++ Include Guard",
+            "type": "object",
+            "properties": {
+                "C/C++ Include Guard.Auto Include Guard Insertion For New File": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically insert the include guard when adding a new header file",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Auto Update Include Guard": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Automatically update the include guard when renaming a file (only effective when macro type is not `GUID`)",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Auto Update Path Allowlist": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of path roots that will be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled. If empty, all paths are included by default.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Auto Update Path Blocklist": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of path roots that will not be automatically updated when `C/C++ Include Guard.Auto Update Include Guard` is enabled.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Header Extensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        ".h",
+                        ".hpp",
+                        ".h++",
+                        ".hh"
+                    ],
+                    "description": "File extensions of header files",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Macro Type": {
+                    "type": "string",
+                    "enum": [
+                        "GUID",
+                        "Filename",
+                        "Filename and GUID",
+                        "Filepath"
+                    ],
+                    "enumDescriptions": [
+                        "Random GUID v4. Separated by underscores.",
+                        "File name of the current document. All non-alphanumeric characters are replaced with underscores.",
+                        "File name of the current document, followed by GUID, separated by an underscore.",
+                        "File path of the current document. All non-alphanumeric characters are replaced with underscores. Works like Filename outside workspaces."
+                    ],
+                    "default": "GUID",
+                    "description": "Source of include guard macros. GUID, Filename, Filename and GUID, or File path.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.File Path Pascal Case to Snake Case": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Converts camelCase/PascalCase directores/filenames to snake_case.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Path Depth": {
+                    "type": "number",
+                    "default": "0",
+                    "description": "Number of folders which should be used for include guard. Disabled with 0.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Path Separator": {
+                    "type": "string",
+                    "default": "_",
+                    "description": "String to replace path separators with when using Filepath Macro Type."
+                },
+                "C/C++ Include Guard.Path Skip": {
+                    "type": "number",
+                    "default": "0",
+                    "description": "Number of folders below the workspace root that should be skipped for include guard. Disabled with 0."
+                },
+                "C/C++ Include Guard.Remove Pragma Once": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Removes #pragma once directive if detected",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Prevent Decimal": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Prevent GUIDs from starting with a decimal number.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Prefix": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Prefix added to include guard macros. Prefix will be concatenated to the beginning of the subfolder prefix.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Subfolder Prefixes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "folderPath": {
+                                "type": "string",
+                                "description": "Folder path relative to the workspace root."
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": "Prefix added to include guard macros."
+                            }
+                        },
+                        "required": [
+                            "folderPath",
+                            "prefix"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "default": [],
+                    "description": "Prefix added to include guard macros when file is in a subfolder of the workspace root."
+                },
+                "C/C++ Include Guard.Suffix": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Suffix added to include guard macros.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Skip Comment Blocks": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Insert include guard beneath the first comment blocks.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Insert Blank Line": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Insert a blank line after the first comment blocks.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Shorten Underscores": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Shorten multiple underscores in filenames or file paths.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Remove Extension": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Remove file extension from include guard macros.",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Comment Style": {
+                    "type": "string",
+                    "enum": [
+                        "Block",
+                        "Line",
+                        "None"
+                    ],
+                    "enumDescriptions": [
+                        "Block Comment /* */",
+                        "Line Comment //",
+                        "No Comment"
+                    ],
+                    "default": "Block",
+                    "markdownDescription": "Comment style for `#endif` line",
+                    "scope": "resource"
+                },
+                "C/C++ Include Guard.Spaces After Endif": {
+                    "type": "number",
+                    "default": "1",
+                    "description": "Number of spaces between #endif and its comment.",
+                    "scope": "resource"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "8.1.0",
+        "@types/mocha": "10.0.8",
+        "@types/node": "22.5.5",
+        "@types/uuid": "10.0.0",
+        "@types/vscode": "1.93.0",
+        "@typescript-eslint/eslint-plugin": "8.5.0",
+        "@typescript-eslint/parser": "8.5.0",
+        "eslint": "9.10.0",
+        "eslint-config-prettier": "9.1.0",
+        "eslint-plugin-prettier": "5.2.1",
+        "glob": "11.0.0",
+        "mocha": "10.7.3",
+        "prettier": "3.3.3",
+        "typescript": "5.6.2"
+    },
+    "dependencies": {
+        "uuid": "10.0.0"
+    },
+    "publisher": "akiramiyakoda",
+    "repository": {
+        "url": "https://github.com/AkiraMiyakoda/cppIncludeGuard",
+        "type": "git"
+    },
+    "keywords": [
+        "c",
+        "c++",
+        "multi-root ready"
+    ]
 }

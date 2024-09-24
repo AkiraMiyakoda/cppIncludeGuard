@@ -1,7 +1,7 @@
 # Insert C/C++ Include Guard Macros
 
 ![GitHub](https://img.shields.io/github/license/AkiraMiyakoda/cppIncludeGuard)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2a44d966d64d4dd78c4a03df2cbb13de)](https://app.codacy.com/gh/AkiraMiyakoda/cppIncludeGuard/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2a44d966d64d4dd78c4a03df2cbb13de)](https://app.codacy.com/gh/AkiraMiyakoda/cppIncludeGuard/dashboard?utm_source=gh\&utm_medium=referral\&utm_content=\&utm_campaign=Badge_grade)
 ![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/akiramiyakoda.cppincludeguard)
 ![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/akiramiyakoda.cppincludeguard)
 ![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/akiramiyakoda.cppincludeguard)
@@ -30,7 +30,7 @@ Automatically update include guard when renaming a header file
 
 ## Features
 
-- Generates include guard macros from GUID (or UUID v4), file name or file path. All non-alphanumeric characters are replaced with underscores.
+* Generates include guard macros from GUID (or UUID v4), file name or file path. All non-alphanumeric characters are replaced with underscores.
 
 ```C
 // GUID
@@ -41,7 +41,7 @@ Automatically update include guard when renaming a header file
 #define FOO_BAR_UTILS_H
 ```
 
-- Selectable comment style on `#endif`. Block, line or none.
+* Selectable comment style on `#endif`. Block, line or none.
 
 ```C
 /* Block comment. */
@@ -54,42 +54,42 @@ Automatically update include guard when renaming a header file
 #endif
 ```
 
-- Prevents GUIDs from starting with a decimal number. (Optional)
+* Prevents GUIDs from starting with a decimal number. (Optional)
 
 ```C
 // Can prevent ill-formed macros like this.
 #define 47A7840C_D31B_4D39_BF77_E5E957F0A97A
 ```
 
-- Adds a cusomizable prefix and/or suffix. (Optional)
+* Adds a cusomizable prefix and/or suffix. (Optional)
 
 ```C
 #define ABC_7FE87DA8_601D_4D8E_AEE5_E6BE6EAB5678_XYZ
 ```
 
-- Shortens redundant underscores. (Optional)
+* Shortens redundant underscores. (Optional)
 
 ```C
 // From a path like 'foo/_bar_/utils.h'.
 #define FOO_BAR_UTILS_H     // not FOO__BAR__UTILS_H
 ```
 
-- Removes the file extension. (Optional)
+* Removes the file extension. (Optional)
 
 ```C
 // From a path like 'foo/bar/utils.h'.
 #define FOO_BAR_UTILS
 ```
 
-- Selectable number of folders which should be used for include guard. (Optional)
+* Selectable number of folders which should be used for include guard. (Optional)
 
 ```C
 // From a path like 'foo/bar/utils.h'.
 #define BAR_UTILS
 ```
 
-- Skips comment blocks at the beginning of a file. (Optional)
-- Inserts a blank line after the first comment blocks. (Optional)
+* Skips comment blocks at the beginning of a file. (Optional)
+* Inserts a blank line after the first comment blocks. (Optional)
 
 ```C
 /**
@@ -103,6 +103,6 @@ Automatically update include guard when renaming a header file
 #define FOO_BAR_UTILS_H
 ```
 
-- Removes #pragma once when an include guard is added. (Optional)
+* Removes #pragma once when an include guard is added. (Optional)
 
-- Customizable number of spaces between `#endif` and its comment.
+* Customizable number of spaces between `#endif` and its comment.

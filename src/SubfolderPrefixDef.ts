@@ -17,6 +17,6 @@ interface SubfolderPrefixDef {
    * @description The prefix used when the file is in the subfolder.
    */
   prefix: string;
-};
+}
 
 export { SubfolderPrefixDef };

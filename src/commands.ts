@@ -26,8 +26,8 @@ function fromGUID(preventDecimal: boolean): string {
 
   // Prevent a macro from starting with a decimal number.
   if (preventDecimal) {
-    const digit = parseInt(uuid.substr(0, 1), 16);
-    uuid = ((digit % 6) + 10).toString(16) + uuid.substr(1);
+    const digit = parseInt(uuid.substring(0, 1), 16);
+    uuid = ((digit % 6) + 10).toString(16) + uuid.substring(1);
   }
 
   return uuid.toUpperCase().replace(/-/g, "_");
@@ -53,7 +53,7 @@ function fromFileName(
   pathSkip: number,
   shortenUnderscores: boolean,
   removeExtension: boolean,
-  convertPathToSnakeCase: boolean
+  convertPathToSnakeCase: boolean,
 ): string {
   const editor = vscode.window.activeTextEditor;
   if (editor === undefined) {
@@ -69,21 +69,23 @@ function fromFileName(
   let fileName = documentUri.toString();
   if (fullPath && baseUri !== undefined) {
     // Convert to path relative to baseUri
-    fileName = fileName.substr(baseUri.uri.toString().length + 1);
+    fileName = fileName.substring(baseUri.uri.toString().length + 1);
 
     if (pathDepth > 0 || pathSkip > 0 || convertPathToSnakeCase) {
       const folderSep = "/";
       let pathSegments = fileName.split(folderSep);
 
       // Discard the first pathSkip segments (but always keep at least one!)
-      pathSegments = pathSegments.slice(Math.min(pathSkip, pathSegments.length - 1));
+      pathSegments = pathSegments.slice(
+        Math.min(pathSkip, pathSegments.length - 1),
+      );
 
-      if(pathDepth > 0) {
+      if (pathDepth > 0) {
         // Keep only the last pathDepth folders and the file segment
         pathSegments = pathSegments.slice(-(pathDepth + 1));
       }
 
-      if(convertPathToSnakeCase) {
+      if (convertPathToSnakeCase) {
         pathSegments = pathSegments.map(convertPascalCaseToSnakeCase);
       }
 
@@ -91,7 +93,7 @@ function fromFileName(
     }
   } else {
     fileName = path.basename(fileName);
-    if(convertPathToSnakeCase) {
+    if (convertPathToSnakeCase) {
       fileName = convertPascalCaseToSnakeCase(fileName);
     }
   }
@@ -101,9 +103,10 @@ function fromFileName(
     fileName = fileName.substring(0, fileName.length - extension.length);
   }
 
-  let macro = fileName.toUpperCase()
-                  .replace(/\//g, pathSeparator)
-                  .replace(/[^A-Z0-9]/g, "_");
+  let macro = fileName
+    .toUpperCase()
+    .replace(/\//g, pathSeparator)
+    .replace(/[^A-Z0-9]/g, "_");
   if (shortenUnderscores) {
     macro = macro.replace(/_+/g, "_");
   }
@@ -119,8 +122,10 @@ function convertPascalCaseToSnakeCase(str: string): string {
   return str;
 }
 
-function getSubdirectoryPrefix(subfolderPrefixDefs: SubfolderPrefixDef[]): string {
-  if(subfolderPrefixDefs.length === 0) {
+function getSubdirectoryPrefix(
+  subfolderPrefixDefs: SubfolderPrefixDef[],
+): string {
+  if (subfolderPrefixDefs.length === 0) {
     return "";
   }
 
@@ -131,15 +136,17 @@ function getSubdirectoryPrefix(subfolderPrefixDefs: SubfolderPrefixDef[]): strin
 
   const documentUri = editor.document.uri;
   const baseUri = vscode.workspace.getWorkspaceFolder(documentUri);
-  if (documentUri === undefined
-    || baseUri === undefined) {
+  if (documentUri === undefined || baseUri === undefined) {
     return "";
   }
 
   // Loop over subfolderPrefixDefs
   for (const subfolderPrefixDef of subfolderPrefixDefs) {
     // Check if the document is in the subfolder
-    const subfolderPath = path.join(baseUri.uri.fsPath, subfolderPrefixDef.folderPath);
+    const subfolderPath = path.join(
+      baseUri.uri.fsPath,
+      subfolderPrefixDef.folderPath,
+    );
     const documentPath = documentUri.fsPath;
     if (documentPath.startsWith(subfolderPath)) {
       return subfolderPrefixDef.prefix;
@@ -158,7 +165,10 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const config = getConfig(fileUri);
   const macroType = config.get<string>("Macro Type", "GUID");
   const macroPrefix = config.get<string>("Prefix", "");
-  const macroSubfolderPrefixDefs = config.get<SubfolderPrefixDef[]>("Subfolder Prefixes", []);
+  const macroSubfolderPrefixDefs = config.get<SubfolderPrefixDef[]>(
+    "Subfolder Prefixes",
+    [],
+  );
   const macroSuffix = config.get<string>("Suffix", "");
   const preventDecimal = config.get<boolean>("Prevent Decimal", true);
   const shortenUnderscores = config.get<boolean>("Shorten Underscores", true);
@@ -168,18 +178,21 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   const pathSeparator = config.get<string>("Path Separator", "_");
   const pathSkip = config.get<number>("Path Skip", 0);
   const spacesAfterEndif = config.get<number>("Spaces After Endif", 1);
-  const convertPathToSnakeCase = config.get<boolean>("File Path Pascal Case to Snake Case", false);
+  const convertPathToSnakeCase = config.get<boolean>(
+    "File Path Pascal Case to Snake Case",
+    false,
+  );
 
   let macroName: string;
   if (macroType !== "GUID") {
     macroName = fromFileName(
-      (macroType === "Filepath"),
+      macroType === "Filepath",
       pathDepth,
       pathSeparator,
       pathSkip,
       shortenUnderscores,
       removeExtension,
-      convertPathToSnakeCase
+      convertPathToSnakeCase,
     );
     if (macroType === "Filename and GUID") {
       macroName += "_" + fromGUID(preventDecimal);
@@ -188,7 +201,9 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
     macroName = fromGUID(preventDecimal);
   }
 
-  const macroSubfolderPrefix : string = getSubdirectoryPrefix(macroSubfolderPrefixDefs);
+  const macroSubfolderPrefix: string = getSubdirectoryPrefix(
+    macroSubfolderPrefixDefs,
+  );
 
   macroName = macroPrefix + macroSubfolderPrefix + macroName + macroSuffix;
   const spaces = " ".repeat(spacesAfterEndif);
@@ -224,10 +239,10 @@ function findLineToInsert(): number {
   let lastPos = 0;
   for (;;) {
     const match = /\/\/.*$|\/(?!\\)\*[\s\S]*?\*(?!\\)\//m.exec(
-      text.substr(lastPos)
+      text.substring(lastPos),
     );
     if (match !== null) {
-      if (/\S/.test(text.substr(lastPos, match.index))) {
+      if (/\S/.test(text.substring(lastPos, match.index))) {
         break;
       } else {
         lastPos += match.index + match[0].length;
@@ -335,7 +350,7 @@ async function findAndRemovePragmaOnce(): Promise<boolean> {
 function lineToRange(n: number): vscode.Range {
   return new vscode.Range(
     new vscode.Position(n, 0),
-    new vscode.Position(n + 1, 0)
+    new vscode.Position(n + 1, 0),
   );
 }
 
@@ -384,9 +399,12 @@ export async function insertIncludeGuard(): Promise<void> {
     }
     edit.insert(
       new vscode.Position(lineToInsert, 0),
-      directives[0] + directives[1]
+      directives[0] + directives[1],
     );
-    edit.insert(new vscode.Position(document.lineCount, 0), "\n\n" + directives[2]);//add 2 extra blank lines before #endif -> issue #8
+    edit.insert(
+      new vscode.Position(document.lineCount, 0),
+      "\n\n" + directives[2],
+    ); //add 2 extra blank lines before #endif -> issue #8
   });
   editor.selection = new vscode.Selection(cursorPosition, cursorPosition); //move back cursor to the original position -> issue #8
 }
@@ -424,7 +442,9 @@ export async function removeIncludeGuard(): Promise<void> {
  * Command Handler for 'extension.updateIncludeGuard'.
  * Replace existing include guard directives with new ones.
  */
-export async function updateIncludeGuard(insertWhenNotFound = true): Promise<void> {
+export async function updateIncludeGuard(
+  insertWhenNotFound = true,
+): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   if (editor === undefined) {
     return;
@@ -449,7 +469,6 @@ export async function updateIncludeGuard(insertWhenNotFound = true): Promise<voi
     });
   } else {
     // Or just insert the new directives if old ones have not been found.
-    if(insertWhenNotFound)
-      insertIncludeGuard();
+    if (insertWhenNotFound) insertIncludeGuard();
   }
 }
