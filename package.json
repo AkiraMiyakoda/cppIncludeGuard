@@ -229,7 +229,7 @@
         "typescript-eslint": "8.11.0"
     },
     "dependencies": {
-        "uuid": "10.0.0"
+        "uuid": "11.0.1"
     },
     "publisher": "akiramiyakoda",
     "repository": {
