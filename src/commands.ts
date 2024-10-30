@@ -316,6 +316,23 @@ function findLinesToRemove(): Array<number> {
 }
 
 /**
+ * Find pragma once in file.
+ *
+ * @returns Promise<RegExpExecArray | null>
+ */
+async function findPragmaOnce(): Promise<RegExpExecArray | null> {
+  const editor = vscode.window.activeTextEditor;
+  if (editor === undefined) {
+    return null;
+  }
+
+  const document = editor.document;
+  const text = document.getText();
+
+  return /^#pragma once*$/m.exec(text);
+}
+
+/**
  * Find pragma once and remove it from file.
  *
  * @returns Promise<boolean>
@@ -374,9 +391,16 @@ export async function insertIncludeGuard(): Promise<void> {
   const skipComment = config.get<boolean>("Skip Comment Blocks", true);
   const insertBlankLine = config.get<boolean>("Insert Blank Line", true);
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
+  const ignoreIfPragmaOnce = config.get<boolean>("Ignore if Pragma Once", true);
 
-  if (removePragmaOnce) {
-    await findAndRemovePragmaOnce();
+  if (await findPragmaOnce()) {
+    if (ignoreIfPragmaOnce) {
+      return;
+    }
+
+    if (removePragmaOnce) {
+      await findAndRemovePragmaOnce();
+    }
   }
 
   let lineToInsert = 0;
@@ -421,9 +445,16 @@ export async function removeIncludeGuard(): Promise<void> {
 
   const config = getConfig(editor.document.uri);
   const removePragmaOnce = config.get<boolean>("Remove Pragma Once", true);
+  const ignoreIfPragmaOnce = config.get<boolean>("Ignore if Pragma Once", true);
 
-  if (removePragmaOnce) {
-    await findAndRemovePragmaOnce();
+  if (await findPragmaOnce()) {
+    if (ignoreIfPragmaOnce) {
+      return;
+    }
+
+    if (removePragmaOnce) {
+      await findAndRemovePragmaOnce();
+    }
   }
 
   // If include guard directives have been found ...
