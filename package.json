@@ -115,10 +115,16 @@
                     "default": "0",
                     "description": "Number of folders below the workspace root that should be skipped for include guard. Disabled with 0."
                 },
+                "C/C++ Include Guard.Ignore if Pragma Once": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description": "Ignore file if #pragma once directive detected. Does not apply to update command.",
+                    "scope": "resource"
+                },
                 "C/C++ Include Guard.Remove Pragma Once": {
                     "type": "boolean",
                     "default": "true",
-                    "description": "Removes #pragma once directive if detected",
+                    "description": "Removes #pragma once directive if detected.",
                     "scope": "resource"
                 },
                 "C/C++ Include Guard.Prevent Decimal": {
