@@ -225,7 +225,7 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@eslint/js": "9.14.0",
+        "@eslint/js": "9.19.0",
         "@types/node": "22.9.3",
         "@types/vscode": "1.95.0",
         "eslint": "9.14.0",
