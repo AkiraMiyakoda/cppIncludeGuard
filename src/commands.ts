@@ -242,7 +242,7 @@ function findLineToInsert(): number {
       text.substring(lastPos),
     );
     if (match !== null) {
-      if (/\S/.test(text.substring(lastPos, match.index))) {
+      if (/\S/.test(text.substring(lastPos, lastPos + match.index))) {
         break;
       } else {
         lastPos += match.index + match[0].length;
