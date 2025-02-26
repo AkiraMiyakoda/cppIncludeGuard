@@ -234,7 +234,7 @@
         "typescript-eslint": "8.24.1"
     },
     "dependencies": {
-        "uuid": "11.0.5"
+        "uuid": "11.1.0"
     },
     "publisher": "akiramiyakoda",
     "repository": {
