@@ -226,7 +226,7 @@
     },
     "devDependencies": {
         "@eslint/js": "9.24.0",
-        "@types/node": "22.14.0",
+        "@types/node": "22.14.1",
         "@types/vscode": "1.99.1",
         "eslint": "9.24.0",
         "globals": "16.0.0",
