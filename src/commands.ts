@@ -206,6 +206,7 @@ function createDirectives(fileUri: vscode.Uri): Array<string> {
   );
 
   macroName = macroPrefix + macroSubfolderPrefix + macroName + macroSuffix;
+  macroName = macroName.replace(/^E/, "E_");
   const spaces = " ".repeat(spacesAfterEndif);
 
   let endifLine = "#endif";
